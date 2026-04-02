@@ -15,21 +15,20 @@ geopandas
 plotly
 matplotlib
 scikit-learn
-# If using PyTorch (recommend unpinned for CI/CD compatibility)
 torch
 torchvision
 
-# --- API & BACKEND ---
+# --- API & TESTING ---
 fastapi
 uvicorn
 pydantic
 python-multipart
+httpx  # CRITICAL: Fixes the Pytest RuntimeError
 
 # --- CROSS-PLATFORM FIXES ---
-# This ensures GitHub (Linux) skips the Windows-only library
 pywin32; sys_platform == 'win32'
 
-# Relaxed versioning for problematic packages
+# Relaxed versioning
 alembic
 contourpy
 attrs
