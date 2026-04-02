@@ -36,3 +36,28 @@ House_Price_Project/
 ├── models/               # Saved .pkl and .onnx artifacts
 ├── scaler.pkl            # Trained StandardScaler object
 └── requirements.txt      # Project Dependencies
+
+🏗️ System Architecture
+The engine utilizes a Multimodal Data Fusion approach to ensure fine-grain accuracy:
+
+Branch A: Structural Tensor Processor
+
+Input: [BHK, SqFt, Bathrooms, Grade]
+
+Processing: Normalization and Feature Scaling via scaler.pkl.
+
+Branch B: Geospatial DNA Decoder
+
+Input: [Latitude, Longitude]
+
+Processing: Extraction of Latent Environmental Vectors (NDVI/Greenery, AQI, Hydro-Scale).
+
+Branch C: Architectural State Evaluator
+
+Input: [Condition, City Multiplier]
+
+Processing: Evaluates maintenance-based depreciation and economic momentum.
+
+Fusion Layer
+
+Concatenates tensors from all branches into a Dense Neural Network for the final price inference.
