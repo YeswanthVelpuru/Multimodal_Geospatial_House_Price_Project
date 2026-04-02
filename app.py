@@ -5,12 +5,16 @@ import plotly.graph_objects as go
 import plotly.express as px
 import requests
 import numpy as np
-from geopy.geocoders import Nominatim
-from datetime import datetime
+import os
 
 # 1. Page & Aesthetic Config
 st.set_page_config(page_title="Urban-AI: Geospatial DL", layout="wide")
-MAPBOX_TOKEN = "pk.eyJ1IjoieWVzd2FudGgtLXYtLTIwMDMiLCJhIjoiY21taHh5ZmJtMHRneDJwczZxaWhiYmg3ZiJ9.IZK_WUOAlFdAsg0ewYyARg"
+
+# Fetch token from environment or streamlit secrets
+MAPBOX_TOKEN = os.getenv("MAPBOX_TOKEN", "pk.eyJ1IjoieWVzd2FudGgtLXYtLTIwMDMiLCJhIjoiY21taHh5ZmJtMHRneDJwczZxaWhiYmg3ZiJ9.IZK_WUOAlFdAsg0ewYyARg")
+
+from geopy.geocoders import Nominatim
+from datetime import datetime
 
 st.markdown(f"""
     <style>
