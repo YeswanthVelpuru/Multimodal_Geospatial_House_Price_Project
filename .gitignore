@@ -1,6 +1,5 @@
 # Python artifacts
 __pycache__/
-*.pkl
 *.pth
 .env
 
