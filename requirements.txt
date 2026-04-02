@@ -11,24 +11,25 @@ geopy
 mapbox
 geopandas
 
-# --- DEEP LEARNING & VIZ ---
+# --- DEEP LEARNING, VIZ & TRACKING ---
 plotly
 matplotlib
 scikit-learn
 torch
 torchvision
+mlflow  # FIXED: Required by model_training.py for experiment tracking
 
 # --- API & TESTING ---
 fastapi
 uvicorn
 pydantic
 python-multipart
-httpx  # CRITICAL: Fixes the Pytest RuntimeError
+httpx  
 
 # --- CROSS-PLATFORM FIXES ---
 pywin32; sys_platform == 'win32'
 
-# Relaxed versioning
+# Relaxed versioning for CI/CD stability
 alembic
 contourpy
 attrs
