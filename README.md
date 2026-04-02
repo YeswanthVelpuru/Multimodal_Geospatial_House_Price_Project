@@ -19,3 +19,9 @@ The engine utilizes a **Triple-Branch Fusion** approach to ensure accuracy:
 - **Automated CI/CD**: Verified builds on Python 3.9, 3.10, and 3.11 via GitHub Actions.
 - **Inference Security**: Optimized for PyTorch 2.6+ with secure weight loading.
 - **Explainable AI**: Integrated SHAP Waterfall plots for real-time feature impact analysis.
+
+### 🗺️ Visual Intelligence
+The frontend utilizes **Mapbox Satellite-Street v12** to provide high-resolution urban context. 
+- **Scatterplot Layers**: Highlights the precise neural search coordinates.
+- **Urban Quality Pulse**: A 6-dimensional radar chart visualizing the latent environmental vector.
+- **Market Momentum**: A 5-year area-drift chart showing localized price appreciation.
