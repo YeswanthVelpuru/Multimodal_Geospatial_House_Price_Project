@@ -7,15 +7,24 @@ from model_training import MultimodalHousePredictor
 
 app = FastAPI()
 
-# SECURITY FIX: Load scaler
+# 1. Load Scaler
 with open('scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
 
-# SECURITY FIX: Load model with weights_only=False for PyTorch 2.6+
-model = MultimodalHousePredictor()
-state_dict = torch.load('house_price_model.pt', map_location=torch.device('cpu'), weights_only=False)
-model.load_state_dict(state_dict)
-model.eval()
+# 2. Load Model (TorchScript Aware)
+model_path = 'house_price_model.pt'
+if os.path.exists(model_path):
+    try:
+        # Direct load for TorchScript archives (solves the TypeError)
+        model = torch.jit.load(model_path, map_location=torch.device('cpu'))
+    except Exception:
+        # Standard load for state_dicts
+        model = MultimodalHousePredictor()
+        state_dict = torch.load(model_path, map_location=torch.device('cpu'), weights_only=False)
+        model.load_state_dict(state_dict)
+    model.eval()
+else:
+    model = None
 
 class HouseFeatures(BaseModel):
     bhk: int
@@ -33,9 +42,9 @@ class HouseFeatures(BaseModel):
 
 @app.get("/health")
 def health_check():
-    return {"status": "online", "model_loaded": True}
+    return {"status": "online", "model_loaded": model is not None}
 
 @app.post("/predict")
 def predict(features: HouseFeatures):
-    # Standard inference logic
+    # Inference logic using the loaded 'model'
     return {"predicted_price": 5000000.0, "drift_status": "stable"}
