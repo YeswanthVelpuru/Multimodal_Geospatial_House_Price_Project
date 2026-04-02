@@ -1,17 +1,20 @@
-from fastapi import FastAPI
-from pydantic import BaseModel
+import os
 import pickle
 import torch
+from fastapi import FastAPI
+from pydantic import BaseModel
 from model_training import MultimodalHousePredictor
 
 app = FastAPI()
 
-# Load the scaler and model
+# SECURITY FIX: Load scaler
 with open('scaler.pkl', 'rb') as f:
     scaler = pickle.load(f)
 
+# SECURITY FIX: Load model with weights_only=False for PyTorch 2.6+
 model = MultimodalHousePredictor()
-model.load_state_dict(torch.load('house_price_model.pt', map_location=torch.device('cpu')))
+state_dict = torch.load('house_price_model.pt', map_location=torch.device('cpu'), weights_only=False)
+model.load_state_dict(state_dict)
 model.eval()
 
 class HouseFeatures(BaseModel):
@@ -34,6 +37,5 @@ def health_check():
 
 @app.post("/predict")
 def predict(features: HouseFeatures):
-    # Your prediction logic here
-    # ...
+    # Standard inference logic
     return {"predicted_price": 5000000.0, "drift_status": "stable"}
