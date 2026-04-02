@@ -1,36 +1,23 @@
-# --- CORE FRAMEWORK ---
 streamlit
 pandas
 numpy
 requests
 python-dotenv
-
-# --- GEOSPATIAL STACK ---
 pydeck
 geopy
 mapbox
 geopandas
-
-# --- DEEP LEARNING, VIZ & TRACKING ---
 plotly
 matplotlib
-scikit-learn
+scikit-learn>=1.5.0
 torch
 torchvision
-mlflow  # FIXED: Required by model_training.py for experiment tracking
-
-# --- API & TESTING ---
+mlflow
 fastapi
 uvicorn
 pydantic
 python-multipart
-httpx  
-
-# --- CROSS-PLATFORM FIXES ---
+httpx
 pywin32; sys_platform == 'win32'
-
-# Relaxed versioning for CI/CD stability
 alembic
 contourpy
-attrs
-jsonschema
