@@ -1,63 +1,28 @@
-# 🏙️ Urban-AI: Multimodal Geospatial Deep Learning
-### Fine-Grain Urban House Price Prediction Engine v2.4
+# 🛰️ Multimodal Geospatial House Price Prediction
+### A 75-Dimensional High-Precision Urban Intelligence Engine
 
-Urban-AI is a cutting-edge valuation engine that leverages **Multimodal Deep Learning** and **Geospatial Graph Neural Networks (GNN)** to predict residential property values with block-level precision. By integrating structural attributes, satellite imagery, and urban micro-data (POI density, transit access, and environmental metrics), the system provides high-fidelity market insights.
+## 📝 Project Abstract
+This project implements an advanced **Multimodal Deep Learning Architecture** for high-precision real estate valuation. Beyond traditional structural metrics, this engine decodes a **75-dimensional feature space**. By fusing primary property tensors with 60 hidden "Urban DNA" data points—simulating broadband stability, power reliability, and localized commercial intensity—the model provides a hyper-accurate valuation in a sophisticated **Jewel-Tone Intelligence Interface**.
 
----
+## 🏗️ System Architecture & 75-Feature Fusion
+The engine operates on a high-dimensional fusion approach:
+* **Structural Tensor Branch**: Processes [BHK, SqFt, Grade, Age] via normalized dense layers.
+* **High-Dimensional Urban DNA**: Silently processes 60 additional latent variables (Infrastructure stability, Road connectivity, Social density).
+* **Environmental & Risk Branch**: Integrates [NDVI Greenery, AQI, Flood Risk, Water Security] to calculate precise valuation premiums or penalties.
 
-## 🚀 Key Features
-* **Multimodal Fusion:** Combines tabular property data with geospatial location intelligence.
-* **Explainable AI (XAI):** Integrated **SHAP (Lundberg et al.)** waterfall plots to visualize feature contributions for every prediction.
-* **Urban Micro-Data Extraction:** Analyzes Point-of-Interest (POI) clusters including hospitals, schools, and transit hubs via Nominatim API.
-* **Interactive Digital Twin UI:** A high-performance Streamlit dashboard featuring Dark-Matter Mapbox visualizations and radar quality matrices.
-* **Production-Ready Backend:** FastAPI server utilizing **ONNX Runtime** for high-speed model inference.
+## 🚀 Technical Milestones
+* **Jewel-Tone Aesthetics**: Transitioned to a premium Sapphire, Amethyst, and Emerald color palette.
+* **Inference Telemetry**: Real-time logging of vector fusion and latent environmental impact.
+* **75-Factor Complexity**: Increased model dimensionality from 15 to 75 features for professional-grade valuation.
+* **Secure PyTorch Loading**: Optimized for PyTorch 2.6+ with explicit weight safety protocols.
 
----
+## 🗺️ Visual Intelligence & XAI
+* **Mapbox Satellite-Street v12**: High-resolution urban context with precise coordinate search.
+* **Urban Quality Pulse**: A multi-dimensional radar chart visualizing the livability index (Eco, Transit, Safety, Commerce).
+* **SHAP Waterfall Decomposition**: Explainable AI (XAI) that reveals exactly how infrastructure and DNA impact the final valuation.
 
-## 🛠️ Tech Stack
-| Category | Tools |
-| :--- | :--- |
-| **Frontend** | Streamlit, Plotly, CSS3 (Glassmorphism) |
-| **Backend** | FastAPI, Uvicorn, Pydantic |
-| **Machine Learning** | Scikit-Learn, ONNX, SHAP |
-| **Geospatial** | GeoPandas, Nominatim (OSM), Mapbox |
-| **Experiment Tracking** | MLflow |
-
----
-
-## 📁 Project Structure
-```text
-House_Price_Project/
-├── app.py                # Streamlit Dashboard (Frontend)
-├── api.py                # FastAPI Inference Engine (Backend)
-├── model_training.py     # ML Pipeline & ONNX Export
-├── data_processing.py    # Feature Engineering & Scaling
-├── dataset/              # Raw and Processed CSV data
-├── models/               # Saved .pkl and .onnx artifacts
-├── scaler.pkl            # Trained StandardScaler object
-└── requirements.txt      # Project Dependencies
-
-🏗️ System Architecture
-The engine utilizes a Multimodal Data Fusion approach to ensure fine-grain accuracy:
-
-Branch A: Structural Tensor Processor
-
-Input: [BHK, SqFt, Bathrooms, Grade]
-
-Processing: Normalization and Feature Scaling via scaler.pkl.
-
-Branch B: Geospatial DNA Decoder
-
-Input: [Latitude, Longitude]
-
-Processing: Extraction of Latent Environmental Vectors (NDVI/Greenery, AQI, Hydro-Scale).
-
-Branch C: Architectural State Evaluator
-
-Input: [Condition, City Multiplier]
-
-Processing: Evaluates maintenance-based depreciation and economic momentum.
-
-Fusion Layer
-
-Concatenates tensors from all branches into a Dense Neural Network for the final price inference.
+## 📦 Artifacts
+* `app.py`: Streamlit Frontend (Jewel Tone UI)
+* `api.py`: FastAPI Inference Server (75-Feature Support)
+* `scaler.pkl`: Feature normalization weights.
+* `house_price_model.pt`: Serialized Multimodal Neural Network weights.
