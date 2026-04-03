@@ -5,8 +5,50 @@ import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Dict
+from datetime import datetime
 
 app = FastAPI()
+
+# --- MODEL & SCALER LOADING ---
+scaler = None
+if os.path.exists('scaler.pkl'):
+    try:
+        with open('scaler.pkl', 'rb') as f:
+            scaler = pickle.load(f)
+    except Exception:
+        scaler = None
+
+model = None
+if os.path.exists('house_price_model.pt'):
+    try:
+        model = torch.jit.load('house_price_model.pt', map_location=torch.device('cpu'))
+    except Exception:
+        model = None
+
+# --- DATA SCHEMA ---
+class HighDimFeatures(BaseModel):
+    bhk: int
+    sqft: float
+    grade: int
+    age: int
+    lat: float
+    lon: float
+    city_multiplier: float
+    greenery: float
+    water: float
+    transit: float
+    aqi: int
+    flood_risk: float
+    hospitals: int
+    education: int
+    comm_density: float
+    dna_vectors: Dict[str, float]
+
+# --- ROUTES ---
+
+@app.get("/")
+def read_root():
+    return {"message": "Multimodal Geospatial API is running"}
 
 @app.get("/health")
 def health_check():
@@ -16,31 +58,13 @@ def health_check():
         "model_loaded": model is not None
     }
 
-# Load Scaler/Model
-scaler = None
-if os.path.exists('scaler.pkl'):
-    with open('scaler.pkl', 'rb') as f:
-        scaler = pickle.load(f)
-
-model = None
-if os.path.exists('house_price_model.pt'):
-    try: model = torch.jit.load('house_price_model.pt', map_location=torch.device('cpu'))
-    except: model = None
-
-class MassiveFeatureSet(BaseModel):
-    bhk: int; sqft: float; grade: int; age: int
-    lat: float; lon: float; city_multiplier: float
-    greenery: float; water: float; transit: float
-    aqi: int; flood_risk: float; hospitals: int; education: int; comm_density: float
-    dna_vectors: Dict[str, float] # The 60 hidden features
-
 @app.post("/predict")
-def predict(f: MassiveFeatureSet):
+def predict(f: HighDimFeatures):
     # 1. Base Structural Value
     base_val = (f.sqft * 4800) * (f.grade / 8) * (1 - (f.age * 0.01)) * f.city_multiplier
     
-    # 2. Process Hidden DNA (60 features) silently
-    dna_score = sum(f.dna_vectors.values()) / 60
+    # 2. Process Hidden DNA (60 features)
+    dna_score = sum(f.dna_vectors.values()) / 60 if f.dna_vectors else 0.5
     dna_premium = (dna_score - 0.5) * 0.35 
     
     # 3. Process Visible Features
@@ -58,7 +82,3 @@ def predict(f: MassiveFeatureSet):
         },
         "quality_index": round(dna_score * 100, 1)
     }
-
-    @app.get("/")
-def read_root():
-    return {"message": "Multimodal Geospatial API is running"}
