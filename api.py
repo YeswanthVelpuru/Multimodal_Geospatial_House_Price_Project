@@ -8,6 +8,14 @@ from typing import Dict
 
 app = FastAPI()
 
+@app.get("/health")
+def health_check():
+    return {
+        "status": "online",
+        "timestamp": datetime.now().isoformat(),
+        "model_loaded": model is not None
+    }
+
 # Load Scaler/Model
 scaler = None
 if os.path.exists('scaler.pkl'):
@@ -50,3 +58,7 @@ def predict(f: MassiveFeatureSet):
         },
         "quality_index": round(dna_score * 100, 1)
     }
+
+    @app.get("/")
+def read_root():
+    return {"message": "Multimodal Geospatial API is running"}
