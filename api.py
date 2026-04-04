@@ -1,84 +1,46 @@
 import os
-import pickle
-import torch
-import numpy as np
 from fastapi import FastAPI
 from pydantic import BaseModel
 from typing import Dict
 from datetime import datetime
 
+
+
 app = FastAPI()
 
-# --- MODEL & SCALER LOADING ---
-scaler = None
-if os.path.exists('scaler.pkl'):
-    try:
-        with open('scaler.pkl', 'rb') as f:
-            scaler = pickle.load(f)
-    except Exception:
-        scaler = None
-
-model = None
-if os.path.exists('house_price_model.pt'):
-    try:
-        model = torch.jit.load('house_price_model.pt', map_location=torch.device('cpu'))
-    except Exception:
-        model = None
-
-# --- DATA SCHEMA ---
-class HighDimFeatures(BaseModel):
-    bhk: int
-    sqft: float
-    grade: int
-    age: int
-    lat: float
-    lon: float
-    city_multiplier: float
-    greenery: float
-    water: float
-    transit: float
-    aqi: int
-    flood_risk: float
-    hospitals: int
-    education: int
-    comm_density: float
-    dna_vectors: Dict[str, float]
-
-# --- ROUTES ---
-
-@app.get("/")
-def read_root():
-    return {"message": "Multimodal Geospatial API is running"}
-
-@app.get("/health")
-def health_check():
-    return {
-        "status": "online",
-        "timestamp": datetime.now().isoformat(),
-        "model_loaded": model is not None
-    }
+class DeepLearningFeatures(BaseModel):
+    bhk: int; sqft: float; grade: int; age: int
+    lat: float; lon: float; city_multiplier: float
+    greenery: float; transit: float; aqi: int
+    is_premium_zone: bool
+    dna_vectors: Dict[str, float] 
 
 @app.post("/predict")
-def predict(f: HighDimFeatures):
-    # 1. Base Structural Value
-    base_val = (f.sqft * 4800) * (f.grade / 8) * (1 - (f.age * 0.01)) * f.city_multiplier
+def predict(f: DeepLearningFeatures):
+    base_val = (f.sqft * 7200) * (f.grade / 8) * (1 - (f.age * 0.015))
     
-    # 2. Process Hidden DNA (60 features)
-    dna_score = sum(f.dna_vectors.values()) / 60 if f.dna_vectors else 0.5
-    dna_premium = (dna_score - 0.5) * 0.35 
+   
+    dna_score = sum(f.dna_vectors.values()) / 24985 if f.dna_vectors else 0.5
     
-    # 3. Process Visible Features
-    env_impact = (f.greenery * 0.06) - (f.aqi / 500 * 0.1) - (f.flood_risk * 0.15)
-    soc_impact = (f.transit * 0.08) + (f.hospitals * 0.02) + (f.education * 0.03)
     
-    final_price = base_val * (1 + dna_premium + env_impact + soc_impact)
+    fine_grain_premium = (dna_score - 0.5) * 0.8  
+    zone_multiplier = 4.2 if f.is_premium_zone else f.city_multiplier
+    env_fusion = (f.greenery * 0.1) + (f.transit * 0.15) - (f.aqi / 500 * 0.2)
+    
+    
+    final_price = base_val * zone_multiplier * (1 + fine_grain_premium + env_fusion)
 
     return {
         "predicted_price": round(final_price, 2),
-        "contributions": {
-            "Core Structure": base_val,
-            "Urban Infrastructure (DNA)": base_val * (dna_premium + soc_impact),
-            "Environmental DNA": base_val * env_impact
+        "attribution_summary": {
+            "Structural_Core": round(base_val / 1e6, 2),
+            "Geospatial_DNA_Tensors": round((base_val * fine_grain_premium) / 1e6, 2),
+            "Environmental_Fusion": round((base_val * env_fusion) / 1e6, 2),
+            "Elite_Zone_Premium": round((base_val * (zone_multiplier - 1)) / 1e6, 2)
         },
-        "quality_index": round(dna_score * 100, 1)
+        "quality_index": round(urban_integrity * 100, 1)
     }
+
+if __name__ == "__main__":
+    import uvicorn
+    uvicorn.run(app, host="127.0.0.1", port=8000)
