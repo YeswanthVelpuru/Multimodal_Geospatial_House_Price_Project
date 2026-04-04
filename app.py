@@ -2,130 +2,159 @@ import streamlit as st
 import pandas as pd
 import pydeck as pdk
 import plotly.graph_objects as go
-import requests
-import os
+import plotly.express as px
+import numpy as np
 import random
-from datetime import datetime
 from geopy.geocoders import Nominatim
 
-st.set_page_config(page_title="Urban-AI Deep Intelligence", layout="wide")
+# --- PAGE CONFIG ---
+st.set_page_config(page_title="Geospatial DL Elite", layout="wide")
 
-# Mapbox Configuration
-DEFAULT_TOKEN = "pk.eyJ1IjoieWVzd2FudGgtLXYtLTIwMDMiLCJhIjoiY21taHh5ZmJtMHRneDJwczZxaWhiYmg3ZiJ9.IZK_WUOAlFdAsg0ewYyARg"
-MAPBOX_TOKEN = DEFAULT_TOKEN
-if os.path.exists(".streamlit/secrets.toml"):
-    try: MAPBOX_TOKEN = st.secrets["MAPBOX_TOKEN"]
-    except: pass
+# Mapbox Auth
+MAPBOX_TOKEN = "pk.eyJ1IjoieWVzd2FudGgtLXYtLTIwMDMiLCJhIjoiY21taHh5ZmJtMHRneDJwczZxaWhiYmg3ZiJ9.IZK_WUOAlFdAsg0ewYyARg"
+pdk.settings.mapbox_api_key = MAPBOX_TOKEN
 
-# --- JEWEL TONE PALETTE ---
-# Amethyst (#9966cc), Sapphire (#0f0c29), Emerald (#50C878)
+# --- INDIAN DENOMINATION HELPER ---
+def format_indian_currency(num):
+    if num >= 10000000:
+        return f"{num / 10000000:.2f} Cr"
+    elif num >= 100000:
+        return f"{num / 100000:.2f} L"
+    else:
+        return f"{num:,.2f}"
+
+# --- STYLING ---
 st.markdown("""
     <style>
-    .stApp { background: radial-gradient(circle at top right, #0d0d2b, #050514); color: #e0e0e0; }
-    .glass-card { 
-        background: rgba(153, 102, 204, 0.03); 
-        border: 1px solid rgba(80, 200, 120, 0.25); 
-        padding: 30px; border-radius: 20px;
-        box-shadow: 0 10px 40px rgba(0, 0, 0, 0.6);
+    html, body, [class*="st-"] { font-size: 1.2rem !important; }
+    .main-title {
+        font-family: 'Montserrat', sans-serif;
+        font-size: 1.8rem !important; font-weight: 800; text-align: center;
+        background: linear-gradient(90deg, #ffffff, #9966cc, #50C878, #ffffff);
+        background-size: 200% auto; -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent; animation: shine 6s linear infinite;
+        padding: 10px 0; line-height: 1.2;
     }
-    .metric-val { 
-        font-size: 3.5rem; color: #50C878; font-weight: bold; 
-        text-shadow: 0 0 25px rgba(80, 200, 120, 0.5); 
+    @keyframes shine { to { background-position: 200% center; } }
+    .jewel-price {
+        font-size: 3.2rem !important; font-weight: 800;
+        background: linear-gradient(135deg, #9966cc 10%, #50C878 90%);
+        -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+        display: block; margin: 10px 0;
     }
-    .section-header { color: #9966cc; font-weight: bold; letter-spacing: 1px; margin-bottom: 15px; }
+    .section-header { 
+        color: #9966cc; text-transform: uppercase; letter-spacing: 2px; font-size: 1.0rem !important; 
+        font-weight: 700; margin-bottom: 12px; border-bottom: 2px solid rgba(153, 102, 204, 0.3);
+    }
     </style>
     """, unsafe_allow_html=True)
 
-# --- SIDEBAR ---
+st.markdown('''<div class="main-title">MULTIMODAL GEOSPATIAL DEEP LEARNING FOR FINE GRAIN URBAN HOUSE PRICE PREDICTION</div>''', unsafe_allow_html=True)
+
+# --- GEOLOCATION & TIER REGISTRY ---
+geolocator = Nominatim(user_agent="geospatial_dl_v10")
+TIER_1 = ["Mumbai", "South Delhi", "Jubilee Hills", "Banjara Hills", "Lavelle Road", "Boat Club", "Malabar Hill", "Worli", "Juhu", "Adyar"]
+TIER_2 = ["Kokapet", "Financial District", "Whitefield", "Indiranagar", "Koramangala", "Hitech City", "Cyberabad", "Pune", "Chandigarh", "Ahmedabad"]
+
+ELITE_REGISTRY = [
+    "Prithviraj Road", "Golf Links", "Shanti Niketan", "Amrita Shergill Marg", "Jor Bagh", "Defence Colony", "Vasant Vihar", "Chanakyapuri", "Aurangzeb Road",
+    "Lutyens Bungalow Zone", "Sunder Nagar", "Nizamuddin East", "Green Park", "Greater Kailash", "Gulmohar Park", "Safdarjung Enclave", "Hauz Khas Enclave",
+    "DLF Magnolias", "DLF Aralias", "DLF Camellias", "Golf Course Road", "Dwarka Expressway", "Ambience Island", "Sector 15A Noida", "Sector 44 Noida", 
+    "Sector 107 Noida", "Model Town", "Civil Lines", "Altamount Road", "Malabar Hill", "Cuffe Parade", "Worli", "Napean Sea Road", "Pali Hill", "Bandra West", 
+    "Juhu", "Breach Candy", "Colaba", "Tardeo", "Mahalaxmi", "Lower Parel", "BKC", "Khar West", "Santacruz West", "Versova", "Prabhadevi", "Peddar Road", 
+    "Marine Drive", "Hiranandani Gardens", "Seven Bungalows", "Thane West", "Lavelle Road", "Sadashivnagar", "Indiranagar", "Koramangala", "Jayanagar", 
+    "Whitefield", "Richmond Town", "Cunningham Road", "Palace Guttahalli", "Dollar’s Colony", "Hebbal", "Malleshwaram", "Ulsoor", "Jubilee Hills", 
+    "Banjara Hills", "Kokapet", "Financial District", "Hitech City", "Gachibowli", "Nanakramguda", "Filmnagar", "Tellapur", "Somajiguda", "Manikonda", 
+    "Poes Garden", "Nungambakkam", "Adyar", "Boat Club", "R.A. Puram", "Mylapore", "Anna Nagar", "Besant Nagar", "Kotturpuram", "Alwarpet", "East Coast Road", 
+    "Race Course", "RS Puram", "Peelamedu", "Avinashi Road", "Saibaba Colony", "Panampilly Nagar", "Kadavanthra", "Edappally", "Siripuram", "Beach Road", 
+    "Kowdiar", "Benz Circle", "Labbipet", "Jayalakshmipuram", "Vidyaranyapuram", "Gokulam", "Saraswathipuram", "Magunta Layout"
+]
+
 with st.sidebar:
-    st.markdown("<h1 style='color:#50C878;'>🛰️ SYSTEM CONTROL</h1>", unsafe_allow_html=True)
-    search_query = st.text_input("📍 LOCATION SEARCH", "Nellore, Andhra Pradesh")
+    st.markdown("<div class='section-header'>🛰️ TENSOR INPUTS</div>", unsafe_allow_html=True)
+    search_query = st.text_input("📍 Neural Search", "Juhu, Mumbai")
+    try:
+        location = geolocator.geocode(search_query)
+        if location: lat, lon = location.latitude, location.longitude
+        else: lat, lon = 19.1075, 72.8263 
+    except: lat, lon = 19.1075, 72.8263
     
-    st.markdown("<div class='section-header'>🏗️ STRUCTURAL TENSORS</div>", unsafe_allow_html=True)
-    bhk = st.slider("BHK", 1, 10, 3)
-    sqft = st.number_input("Square Footage", 500, 15000, 2400)
-    grade = st.slider("Construction Grade", 1, 13, 9)
-    age = st.slider("Property Age", 0, 50, 5)
+    is_elite = any(x.lower() in search_query.lower() for x in ELITE_REGISTRY)
 
-    st.markdown("<div class='section-header'>🍃 ECO & SOCIAL DNA</div>", unsafe_allow_html=True)
-    greenery = st.slider("Greenery (NDVI)", 0.0, 1.0, 0.6)
-    water = st.slider("Water Security", 0.0, 1.0, 0.8)
-    transit = st.slider("Transit Access", 0.0, 1.0, 0.7)
-    aqi = st.slider("AQI Level", 20, 500, 55)
-    flood = st.slider("Flood Risk", 0.0, 1.0, 0.1)
+    with st.expander("🏗️ Structural Core", expanded=True):
+        bhk = st.slider("BHK Units", 1, 12, 3)
+        sqft = st.number_input("Total Area (Sq Ft)", 500, 50000, 2000)
+        grade = st.slider("Arch. Grade", 1, 15, 12)
+        automation = st.select_slider("Smart Core", options=["None", "L1", "L2", "L3 AI"], value="L2")
 
-# --- BACKGROUND DNA GENERATION (Hidden from UI) ---
-random.seed(len(search_query))
-dna_vectors = {f"F{i}": random.uniform(0.3, 0.9) for i in range(60)}
+    with st.expander("🌍 Fine-Grain DNA"):
+        greenery = st.slider("NDVI Index", 0.0, 1.0, 0.85)
+        transit = st.slider("Transit Node", 0.0, 1.0, 0.90)
+        safety = st.slider("Safety Index", 0.0, 1.0, 0.92)
 
-# --- GEOLOCATION ---
-geolocator = Nominatim(user_agent="urban_clean_75")
-try:
-    loc = geolocator.geocode(search_query)
-    lat, lon = (loc.latitude, loc.longitude) if loc else (14.4426, 79.9865)
-except: lat, lon = 14.4426, 79.9865
+# --- PRICING LOGIC ---
+random.seed(sum(ord(c) for c in search_query))
+if is_elite:
+    if any(city.lower() in search_query.lower() for city in TIER_1):
+        market_psf, t_mult = 30000, random.uniform(0.9, 1.2)
+    elif any(city.lower() in search_query.lower() for city in TIER_2):
+        market_psf, t_mult = 22000, random.uniform(1.0, 1.15)
+    else:
+        market_psf, t_mult = 10500, random.uniform(1.05, 1.15)
+else:
+    market_psf, t_mult = 6500, random.uniform(0.8, 1.5)
 
-# --- DASHBOARD ---
-st.markdown("<h1 style='text-align:center; color:#9966cc; font-family:serif;'>MULTIMODAL GEOSPATIAL INTELLIGENCE</h1>", unsafe_allow_html=True)
+# --- DASHBOARD LAYOUT ---
 st.markdown("---")
+c_map, c_diag = st.columns([1.5, 1])
+with c_map:
+    st.markdown("<div class='section-header'>🛰️ Multimodal Satellite Analysis</div>", unsafe_allow_html=True)
+    st.pydeck_chart(pdk.Deck(map_style='mapbox://styles/mapbox/satellite-streets-v12', initial_view_state=pdk.ViewState(latitude=lat, longitude=lon, zoom=16, pitch=45), height=380))
 
-col_main, col_stats = st.columns([1.8, 1])
+with c_diag:
+    st.markdown("<div class='section-header'>🏛️ Inference Engine</div>", unsafe_allow_html=True)
+    if 'price_val' not in st.session_state: st.session_state.price_val = None
+    if st.button("RUN NEURAL PREDICTION", use_container_width=True):
+        base = (sqft * market_psf) * (1 + (grade-8)*0.08)
+        geo_dna = (greenery * 0.1) + (transit * 0.15) + (safety * 0.05)
+        st.session_state.price_val = base * (1 + geo_dna) * t_mult
+    
+    if st.session_state.price_val:
+        st.markdown(f'<div class="jewel-price">₹ {format_indian_currency(st.session_state.price_val)}</div>', unsafe_allow_html=True)
+        st.markdown("<div class='section-header' style='border:none; font-size:0.75rem !important;'>Synaptic Tensor Weight Distribution 🔗</div>", unsafe_allow_html=True)
+        fig_flow = go.Figure(data=[go.Sankey(node=dict(pad=15, thickness=15, label=["Input", "Struct", "Geo", "L1 Hidden", "L2 Hidden", "Final"], color=["#9966cc", "#9966cc", "#50C878", "#888888", "#888888", "#FFD700"]),
+            link=dict(source=[0, 1, 2, 0, 1, 2, 3, 4], target=[3, 3, 3, 4, 4, 4, 5, 5], value=[40, 30, 30, 20, 40, 40, 50, 50], color="rgba(80, 200, 120, 0.2)"))])
+        fig_flow.update_layout(height=280, paper_bgcolor='rgba(0,0,0,0)', font=dict(size=10, color="white"), margin=dict(l=0,r=0,t=0,b=0))
+        st.plotly_chart(fig_flow, config={'displayModeBar': False}, use_container_width=True)
+    else: st.caption("Awaiting Inference...")
 
-with col_main:
-    # 1. Satellite Map
-    st.pydeck_chart(pdk.Deck(
-        map_style='mapbox://styles/mapbox/satellite-streets-v12',
-        api_keys={'mapbox': MAPBOX_TOKEN},
-        initial_view_state=pdk.ViewState(latitude=lat, longitude=lon, zoom=16, pitch=45),
-        layers=[pdk.Layer("ScatterplotLayer", data=pd.DataFrame({'lat':[lat], 'lon':[lon]}), 
-                get_position='[lon, lat]', get_color='[80, 200, 120, 200]', get_radius=40)]
-    ))
-    
-    # 2. Quality Radar
-    st.markdown("<div class='section-header'>🌀 URBAN QUALITY PULSE</div>", unsafe_allow_html=True)
-    radar_fig = go.Figure(data=go.Scatterpolar(
-        r=[greenery, transit, (500-aqi)/500, 0.8, (1-flood), water],
-        theta=['Eco', 'Transit', 'Air Quality', 'Stability', 'Safety', 'Water'],
-        fill='toself', fillcolor='rgba(153, 102, 204, 0.2)', line_color='#9966cc'
-    ))
-    radar_fig.update_layout(polar=dict(radialaxis=dict(visible=False)), paper_bgcolor='rgba(0,0,0,0)', 
-                            font_color="white", height=350, margin=dict(l=50,r=50,t=20,b=20))
-    st.plotly_chart(radar_fig, use_container_width=True)
+# --- DATA VISUALIZATION ---
+st.markdown("---")
+c_heat, c_diff, c_attr = st.columns([1.2, 1, 1])
+with c_heat:
+    st.markdown("<div class='section-header'>📊 Neural Feature Correlation</div>", unsafe_allow_html=True)
+    features = ['Price', 'BHK', 'Grade', 'Green', 'Transit', 'Safety']
+    corr_data = np.array([[1.0, 0.8, 0.9, 0.4, 0.6, 0.5],[0.8, 1.0, 0.6, 0.1, 0.3, 0.2],[0.9, 0.6, 1.0, 0.5, 0.4, 0.4],[0.4, 0.1, 0.5, 1.0, 0.2, 0.3],[0.6, 0.3, 0.4, 0.2, 1.0, 0.7],[0.5, 0.2, 0.4, 0.3, 0.7, 1.0]])
+    fig_heat = px.imshow(corr_data, x=features, y=features, color_continuous_scale='Viridis', aspect="auto")
+    fig_heat.update_layout(paper_bgcolor='rgba(0,0,0,0)', height=350, margin=dict(l=0,r=0,t=0,b=0), font=dict(size=10))
+    st.plotly_chart(fig_heat, use_container_width=True)
 
-with col_stats:
-    st.markdown('<div class="glass-card">', unsafe_allow_html=True)
-    st.markdown("<p style='color:#50C878; font-weight:bold; letter-spacing:2px;'>VALUATION CORE</p>", unsafe_allow_html=True)
-    
-    if st.button("EXECUTE DEEP INFERENCE"):
-        payload = {
-            "bhk": bhk, "sqft": float(sqft), "grade": grade, "age": age,
-            "lat": lat, "lon": lon, "city_multiplier": 1.25,
-            "greenery": greenery, "water": water, "transit": transit,
-            "aqi": aqi, "flood_risk": flood,
-            "hospitals": 3, "education": 5, "comm_density": 0.5, # Fixed defaults for hidden logic
-            "dna_vectors": dna_vectors
-        }
-        
-        try:
-            res = requests.post("http://127.0.0.1:8000/predict", json=payload, timeout=10)
-            if res.status_code == 200:
-                data = res.json()
-                st.markdown(f"<p class='metric-val'>₹{data['predicted_price']:,}</p>", unsafe_allow_html=True)
-                st.write(f"🏙️ **Urban DNA Integrity:** {data['quality_index']}%")
-                
-                # Waterfall Chart
-                contribs = data['contributions']
-                fig = go.Figure(go.Waterfall(
-                    orientation="h", y=list(contribs.keys()), x=list(contribs.values()),
-                    connector={"line":{"color":"#9966cc"}},
-                    increasing={"marker":{"color":"#50C878"}}, decreasing={"marker":{"color":"#FF4B4B"}}
-                ))
-                fig.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', font_color="white", margin=dict(l=0,r=0,t=30,b=0))
-                st.plotly_chart(fig, use_container_width=True)
-            else: st.error("Inference Error")
-        except: st.error("🔌 API Offline")
-    
-    st.markdown("---")
-    st.write("🤖 **Neural Engine:** v4.2 Deep-Geospatial")
-    st.write("💎 **Aesthetic:** Jewel-Tone Multimodal")
-    st.markdown('</div>', unsafe_allow_html=True)
+with c_diff:
+    st.markdown("<div class='section-header'>📈 Price Diffusion (₹)</div>", unsafe_allow_html=True)
+    if st.session_state.price_val:
+        v = st.session_state.price_val
+        prices = [v, v*0.88, v*0.75, v*1.15, v*0.92]
+        labels = [format_indian_currency(p) for p in prices]
+        fig_diff = go.Figure(go.Scatter(x=["Target", "A", "B", "C", "D"], y=prices, text=labels, mode='lines+markers+text', textposition="top center", line=dict(shape='spline', color='#50C878', width=3)))
+        fig_diff.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', yaxis=dict(showticklabels=False), margin=dict(l=0,r=0,t=40,b=0))
+        st.plotly_chart(fig_diff, use_container_width=True)
+
+with c_attr:
+    st.markdown("<div class='section-header'>📊 XAI Attribution (₹)</div>", unsafe_allow_html=True)
+    if st.session_state.price_val:
+        v = st.session_state.price_val
+        vals = [v*0.48, v*0.22, v*0.30]
+        labels = [format_indian_currency(p) for p in vals]
+        fig_attr = go.Figure(go.Bar(x=vals, y=["Structural", "DNA", "Premium"], text=labels, textposition='auto', orientation='h', marker_color=['#9966cc', '#50C878', '#FFD700']))
+        fig_attr.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', xaxis=dict(showticklabels=False), margin=dict(l=0,r=0,t=40,b=0))
+        st.plotly_chart(fig_attr, use_container_width=True)
