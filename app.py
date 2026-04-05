@@ -7,14 +7,10 @@ import numpy as np
 import random
 from geopy.geocoders import Nominatim
 
-# --- PAGE CONFIG ---
-st.set_page_config(page_title="Geospatial DL Elite", layout="wide")
+st.set_page_config(page_title="Geospatial DL Elite", layout="wide", initial_sidebar_state="expanded")
 
-# Mapbox Auth
 MAPBOX_TOKEN = "pk.eyJ1IjoieWVzd2FudGgtLXYtLTIwMDMiLCJhIjoiY21taHh5ZmJtMHRneDJwczZxaWhiYmg3ZiJ9.IZK_WUOAlFdAsg0ewYyARg"
-pdk.settings.mapbox_api_key = MAPBOX_TOKEN
 
-# --- INDIAN DENOMINATION HELPER ---
 def format_indian_currency(num):
     if num >= 10000000:
         return f"{num / 10000000:.2f} Cr"
@@ -23,7 +19,6 @@ def format_indian_currency(num):
     else:
         return f"{num:,.2f}"
 
-# --- STYLING ---
 st.markdown("""
     <style>
     html, body, [class*="st-"] { font-size: 1.2rem !important; }
@@ -51,8 +46,7 @@ st.markdown("""
 
 st.markdown('''<div class="main-title">MULTIMODAL GEOSPATIAL DEEP LEARNING FOR FINE GRAIN URBAN HOUSE PRICE PREDICTION</div>''', unsafe_allow_html=True)
 
-# --- GEOLOCATION & TIER REGISTRY ---
-geolocator = Nominatim(user_agent="geospatial_dl_v10")
+geolocator = Nominatim(user_agent="geospatial_dl_v10_deploy")
 TIER_1 = ["Mumbai", "South Delhi", "Jubilee Hills", "Banjara Hills", "Lavelle Road", "Boat Club", "Malabar Hill", "Worli", "Juhu", "Adyar"]
 TIER_2 = ["Kokapet", "Financial District", "Whitefield", "Indiranagar", "Koramangala", "Hitech City", "Cyberabad", "Pune", "Chandigarh", "Ahmedabad"]
 
@@ -73,11 +67,15 @@ ELITE_REGISTRY = [
 with st.sidebar:
     st.markdown("<div class='section-header'>🛰️ TENSOR INPUTS</div>", unsafe_allow_html=True)
     search_query = st.text_input("📍 Neural Search", "Juhu, Mumbai")
+    
     try:
-        location = geolocator.geocode(search_query)
-        if location: lat, lon = location.latitude, location.longitude
-        else: lat, lon = 19.1075, 72.8263 
-    except: lat, lon = 19.1075, 72.8263
+        location = geolocator.geocode(search_query, timeout=10)
+        if location: 
+            lat, lon = location.latitude, location.longitude
+        else: 
+            lat, lon = 19.1075, 72.8263 
+    except: 
+        lat, lon = 19.1075, 72.8263
     
     is_elite = any(x.lower() in search_query.lower() for x in ELITE_REGISTRY)
 
@@ -92,7 +90,6 @@ with st.sidebar:
         transit = st.slider("Transit Node", 0.0, 1.0, 0.90)
         safety = st.slider("Safety Index", 0.0, 1.0, 0.92)
 
-# --- PRICING LOGIC ---
 random.seed(sum(ord(c) for c in search_query))
 if is_elite:
     if any(city.lower() in search_query.lower() for city in TIER_1):
@@ -104,16 +101,27 @@ if is_elite:
 else:
     market_psf, t_mult = 6500, random.uniform(0.8, 1.5)
 
-# --- DASHBOARD LAYOUT ---
 st.markdown("---")
 c_map, c_diag = st.columns([1.5, 1])
+
 with c_map:
     st.markdown("<div class='section-header'>🛰️ Multimodal Satellite Analysis</div>", unsafe_allow_html=True)
-    st.pydeck_chart(pdk.Deck(map_style='mapbox://styles/mapbox/satellite-streets-v12', initial_view_state=pdk.ViewState(latitude=lat, longitude=lon, zoom=16, pitch=45), height=380))
+    
+    view_state = pdk.ViewState(latitude=lat, longitude=lon, zoom=15, pitch=45)
+    
+    r = pdk.Deck(
+        map_style='mapbox://styles/mapbox/satellite-streets-v12',
+        initial_view_state=view_state,
+        api_keys={'mapbox': MAPBOX_TOKEN},
+        height=400,
+        layers=[]
+    )
+    st.pydeck_chart(r)
 
 with c_diag:
     st.markdown("<div class='section-header'>🏛️ Inference Engine</div>", unsafe_allow_html=True)
     if 'price_val' not in st.session_state: st.session_state.price_val = None
+    
     if st.button("RUN NEURAL PREDICTION", use_container_width=True):
         base = (sqft * market_psf) * (1 + (grade-8)*0.08)
         geo_dna = (greenery * 0.1) + (transit * 0.15) + (safety * 0.05)
@@ -122,15 +130,21 @@ with c_diag:
     if st.session_state.price_val:
         st.markdown(f'<div class="jewel-price">₹ {format_indian_currency(st.session_state.price_val)}</div>', unsafe_allow_html=True)
         st.markdown("<div class='section-header' style='border:none; font-size:0.75rem !important;'>Synaptic Tensor Weight Distribution 🔗</div>", unsafe_allow_html=True)
-        fig_flow = go.Figure(data=[go.Sankey(node=dict(pad=15, thickness=15, label=["Input", "Struct", "Geo", "L1 Hidden", "L2 Hidden", "Final"], color=["#9966cc", "#9966cc", "#50C878", "#888888", "#888888", "#FFD700"]),
-            link=dict(source=[0, 1, 2, 0, 1, 2, 3, 4], target=[3, 3, 3, 4, 4, 4, 5, 5], value=[40, 30, 30, 20, 40, 40, 50, 50], color="rgba(80, 200, 120, 0.2)"))])
+        
+        fig_flow = go.Figure(data=[go.Sankey(
+            node=dict(pad=15, thickness=15, label=["Input", "Struct", "Geo", "L1 Hidden", "L2 Hidden", "Final"], 
+                      color=["#9966cc", "#9966cc", "#50C878", "#888888", "#888888", "#FFD700"]),
+            link=dict(source=[0, 1, 2, 0, 1, 2, 3, 4], target=[3, 3, 3, 4, 4, 4, 5, 5], 
+                      value=[40, 30, 30, 20, 40, 40, 50, 50], color="rgba(80, 200, 120, 0.2)"))])
+        
         fig_flow.update_layout(height=280, paper_bgcolor='rgba(0,0,0,0)', font=dict(size=10, color="white"), margin=dict(l=0,r=0,t=0,b=0))
         st.plotly_chart(fig_flow, config={'displayModeBar': False}, use_container_width=True)
-    else: st.caption("Awaiting Inference...")
+    else: 
+        st.info("Adjust parameters and trigger Neural Prediction to view results.")
 
-# --- DATA VISUALIZATION ---
 st.markdown("---")
 c_heat, c_diff, c_attr = st.columns([1.2, 1, 1])
+
 with c_heat:
     st.markdown("<div class='section-header'>📊 Neural Feature Correlation</div>", unsafe_allow_html=True)
     features = ['Price', 'BHK', 'Grade', 'Green', 'Transit', 'Safety']
