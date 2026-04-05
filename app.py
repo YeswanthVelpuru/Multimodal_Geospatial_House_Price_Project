@@ -21,7 +21,7 @@ def format_indian_currency(num):
 
 st.markdown("""
     <style>
-    html, body, [class*="st-"] { font-size: 1.2rem !important; }
+    html, body, [class*="st-"] { font-size: 1.1rem !important; }
     .main-title {
         font-family: 'Montserrat', sans-serif;
         font-size: 1.8rem !important; font-weight: 800; text-align: center;
@@ -38,7 +38,7 @@ st.markdown("""
         display: block; margin: 10px 0;
     }
     .section-header { 
-        color: #9966cc; text-transform: uppercase; letter-spacing: 2px; font-size: 1.0rem !important; 
+        color: #9966cc; text-transform: uppercase; letter-spacing: 2px; font-size: 0.9rem !important; 
         font-weight: 700; margin-bottom: 12px; border-bottom: 2px solid rgba(153, 102, 204, 0.3);
     }
     </style>
@@ -106,16 +106,10 @@ c_map, c_diag = st.columns([1.5, 1])
 
 with c_map:
     st.markdown("<div class='section-header'>🛰️ Multimodal Satellite Analysis</div>", unsafe_allow_html=True)
-    
-    view_state = pdk.ViewState(latitude=lat, longitude=lon, zoom=15, pitch=45)
-    
-    r = pdk.Deck(
-        map_style='mapbox://styles/mapbox/satellite-streets-v12',
-        initial_view_state=view_state,
-        api_keys={'mapbox': MAPBOX_TOKEN},
-        height=400,
-        layers=[]
-    )
+    chart_data = pd.DataFrame(np.random.randn(100, 2) / [100, 100] + [lat, lon], columns=['lat', 'lon'])
+    view_state = pdk.ViewState(latitude=lat, longitude=lon, zoom=14, pitch=50)
+    layer = pdk.Layer('HexagonLayer', data=chart_data, get_position='[lon, lat]', radius=100, elevation_scale=4, elevation_range=[0, 1000], pickable=True, extruded=True, get_fill_color="[255, (1 - elevation_scale/10) * 255, 0, 140]")
+    r = pdk.Deck(map_style='mapbox://styles/mapbox/satellite-streets-v12', initial_view_state=view_state, api_keys={'mapbox': MAPBOX_TOKEN}, height=400, layers=[layer])
     st.pydeck_chart(r)
 
 with c_diag:
@@ -129,46 +123,54 @@ with c_diag:
     
     if st.session_state.price_val:
         st.markdown(f'<div class="jewel-price">₹ {format_indian_currency(st.session_state.price_val)}</div>', unsafe_allow_html=True)
-        st.markdown("<div class='section-header' style='border:none; font-size:0.75rem !important;'>Synaptic Tensor Weight Distribution 🔗</div>", unsafe_allow_html=True)
         
-        fig_flow = go.Figure(data=[go.Sankey(
-            node=dict(pad=15, thickness=15, label=["Input", "Struct", "Geo", "L1 Hidden", "L2 Hidden", "Final"], 
-                      color=["#9966cc", "#9966cc", "#50C878", "#888888", "#888888", "#FFD700"]),
-            link=dict(source=[0, 1, 2, 0, 1, 2, 3, 4], target=[3, 3, 3, 4, 4, 4, 5, 5], 
-                      value=[40, 30, 30, 20, 40, 40, 50, 50], color="rgba(80, 200, 120, 0.2)"))])
-        
-        fig_flow.update_layout(height=280, paper_bgcolor='rgba(0,0,0,0)', font=dict(size=10, color="white"), margin=dict(l=0,r=0,t=0,b=0))
-        st.plotly_chart(fig_flow, config={'displayModeBar': False}, use_container_width=True)
+        # Market Sentiment Gauge
+        sentiment_score = random.randint(60, 95) if is_elite else random.randint(30, 75)
+        fig_gauge = go.Figure(go.Indicator(mode = "gauge+number", value = sentiment_score, domain = {'x': [0, 1], 'y': [0, 1]}, title = {'text': "Market Heat Index", 'font': {'size': 14}}, gauge = {'axis': {'range': [None, 100], 'tickwidth': 1}, 'bar': {'color': "#50C878"}, 'steps': [{'range': [0, 50], 'color': "rgba(255, 0, 0, 0.1)"}, {'range': [50, 80], 'color': "rgba(255, 255, 0, 0.1)"}, {'range': [80, 100], 'color': "rgba(0, 255, 0, 0.1)"}]}))
+        fig_gauge.update_layout(height=180, margin=dict(l=10, r=10, t=40, b=10), paper_bgcolor='rgba(0,0,0,0)', font={'color': "white"})
+        st.plotly_chart(fig_gauge, use_container_width=True)
     else: 
-        st.info("Adjust parameters and trigger Neural Prediction to view results.")
+        st.info("Adjust parameters and trigger Neural Prediction.")
 
 st.markdown("---")
-c_heat, c_diff, c_attr = st.columns([1.2, 1, 1])
+# New row for deeper analysis
+c_heat, c_risk, c_econ = st.columns([1, 1, 1])
 
 with c_heat:
-    st.markdown("<div class='section-header'>📊 Neural Feature Correlation</div>", unsafe_allow_html=True)
-    features = ['Price', 'BHK', 'Grade', 'Green', 'Transit', 'Safety']
-    corr_data = np.array([[1.0, 0.8, 0.9, 0.4, 0.6, 0.5],[0.8, 1.0, 0.6, 0.1, 0.3, 0.2],[0.9, 0.6, 1.0, 0.5, 0.4, 0.4],[0.4, 0.1, 0.5, 1.0, 0.2, 0.3],[0.6, 0.3, 0.4, 0.2, 1.0, 0.7],[0.5, 0.2, 0.4, 0.3, 0.7, 1.0]])
-    fig_heat = px.imshow(corr_data, x=features, y=features, color_continuous_scale='Viridis', aspect="auto")
-    fig_heat.update_layout(paper_bgcolor='rgba(0,0,0,0)', height=350, margin=dict(l=0,r=0,t=0,b=0), font=dict(size=10))
-    st.plotly_chart(fig_heat, use_container_width=True)
-
-with c_diff:
-    st.markdown("<div class='section-header'>📈 Price Diffusion (₹)</div>", unsafe_allow_html=True)
+    st.markdown("<div class='section-header'>🔮 5-Year Forecast Engine</div>", unsafe_allow_html=True)
     if st.session_state.price_val:
-        v = st.session_state.price_val
-        prices = [v, v*0.88, v*0.75, v*1.15, v*0.92]
-        labels = [format_indian_currency(p) for p in prices]
-        fig_diff = go.Figure(go.Scatter(x=["Target", "A", "B", "C", "D"], y=prices, text=labels, mode='lines+markers+text', textposition="top center", line=dict(shape='spline', color='#50C878', width=3)))
-        fig_diff.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', yaxis=dict(showticklabels=False), margin=dict(l=0,r=0,t=40,b=0))
-        st.plotly_chart(fig_diff, use_container_width=True)
+        years = [2024, 2025, 2026, 2027, 2028, 2029]
+        growth = [1.0, 1.08, 1.15, 1.28, 1.45, 1.62] if is_elite else [1.0, 1.05, 1.12, 1.18, 1.25, 1.35]
+        projected = [st.session_state.price_val * g for g in growth]
+        fig_forecast = px.area(x=years, y=projected, markers=True, color_discrete_sequence=['#50C878'])
+        fig_forecast.update_layout(height=300, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', margin=dict(l=0,r=0,t=20,b=0), xaxis_title="Projection Year", yaxis_title="Price (₹)")
+        st.plotly_chart(fig_forecast, use_container_width=True)
 
-with c_attr:
-    st.markdown("<div class='section-header'>📊 XAI Attribution (₹)</div>", unsafe_allow_html=True)
+with c_risk:
+    st.markdown("<div class='section-header'>⚠️ Geo-Environmental Risk</div>", unsafe_allow_html=True)
+    # Simulated environmental data
+    risk_metrics = ['Flood Risk', 'AQI Index', 'Noise Level', 'Heat Island', 'Seismic']
+    risk_values = [random.uniform(0.1, 0.4) if is_elite else random.uniform(0.3, 0.8) for _ in risk_metrics]
+    
+    fig_risk = go.Figure(data=go.Scatterpolar(r=risk_values, theta=risk_metrics, fill='toself', line_color='#9966cc'))
+    fig_risk.update_layout(polar=dict(radialaxis=dict(visible=True, range=[0, 1])), showlegend=False, height=300, paper_bgcolor='rgba(0,0,0,0)', margin=dict(l=40,r=40,t=20,b=20))
+    st.plotly_chart(fig_risk, use_container_width=True)
+
+with c_econ:
+    st.markdown("<div class='section-header'>💎 Unit Economics</div>", unsafe_allow_html=True)
     if st.session_state.price_val:
-        v = st.session_state.price_val
-        vals = [v*0.48, v*0.22, v*0.30]
-        labels = [format_indian_currency(p) for p in vals]
-        fig_attr = go.Figure(go.Bar(x=vals, y=["Structural", "DNA", "Premium"], text=labels, textposition='auto', orientation='h', marker_color=['#9966cc', '#50C878', '#FFD700']))
-        fig_attr.update_layout(height=350, paper_bgcolor='rgba(0,0,0,0)', plot_bgcolor='rgba(0,0,0,0)', xaxis=dict(showticklabels=False), margin=dict(l=0,r=0,t=40,b=0))
-        st.plotly_chart(fig_attr, use_container_width=True)
+        psf_final = st.session_state.price_val / sqft
+        emi_est = (st.session_state.price_val * 0.8 * 0.09) / 12 
+        
+        # Investment Status logic
+        status = "💎 STRONG BUY" if is_elite and sentiment_score > 80 else "⚖️ HOLD"
+        
+        st.metric("Price Per Sq.Ft", f"₹ {psf_final:,.0f}")
+        st.metric("Est. Monthly EMI", f"₹ {format_indian_currency(emi_est)}")
+        st.markdown(f"**Investment Signal:** `{status}`")
+        
+        econ_df = pd.DataFrame({
+            "Metric": ["Rental Yield", "Tax Est. (1%)", "Liquidity Score"],
+            "Value": ["3.2%", f"₹ {format_indian_currency(st.session_state.price_val*0.01)}", "High" if is_elite else "Moderate"]
+        })
+        st.table(econ_df)
