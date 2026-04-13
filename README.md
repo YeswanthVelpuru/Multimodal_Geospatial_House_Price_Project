@@ -1,129 +1,181 @@
-🛰️ Multimodal Geospatial DL: Fine-Grain Urban House Price Prediction
+🛰️ Multimodal Geospatial Deep Learning
+Fine-Grain Urban House Price Prediction (India)
 
-A high-fidelity **Neural Inference Dashboard** designed to predict house prices in the Indian market with "fine-grain" precision. By fusing structural architectural data with geospatial "Reachability" layers, the model provides hyper-localized valuations across major Indian metros.
+A production-grade AI system that predicts house prices using Multimodal Deep Learning + Geospatial Intelligence + Market Tier Modeling.
 
-💎 Core Features
+This platform combines:
 
-🧠 Neural Inference & Explainability
-* **Reachability Mapping:** Replaced legacy heatmaps with **Isochrone Connectivity Circles** (10-min walk vs. 15-min drive) to simulate real-world urban accessibility.
-* **XAI (Explainable AI):** Integrated **Neural Attention Weights** (SHAP-style) that visualize exactly how the model prioritizes Location DNA vs. Structural Core for every specific query.
-* **Neighborhood Pulse:** Real-time **Radar Analytics** measuring Safety, AQI, Noise, Greenery, and Transit Node density.
+🧠 Deep Learning (CNN + Tabular Fusion)
+🌍 Geospatial Reachability
+🇮🇳 Indian Real Estate Market Intelligence
+to deliver hyper-local, explainable property valuations.
 
-🇮🇳 Indian Market Intelligence
-* **Tiered Elite Registry:** A proprietary database of 100+ high-value neighborhoods (Juhu, Adyar, Jubilee Hills) calibrated with specific PSF benchmarks.
-* **Dynamic Amenity Logic:** A context-aware generator that suggests high-value add-ons (EV Charging, Infinity Pools) based on the specific socio-economic tier of the location.
-* **Indian Denomination Logic:** Built-in currency helper scaling valuations into **Lakhs (L)** and **Crores (Cr)**.
+🚀 🔥 Core Features
+🧠 Deep Learning Inference Engine
+Multimodal Architecture: CNN (image) + Tabular features
+Feature Fusion using Dense Neural Layers
+Handles both structural + visual signals
 
-🏗️ Project Artifacts & Methodology
+🌍 Geospatial Intelligence
+📍 Live Map Rendering (PyDeck + Mapbox)
+🛰️ Isochrone Reachability Simulation
+10-min walk radius
+15-min drive radius
+Location-aware valuation
+🇮🇳 10-Tier City Intelligence System
+Dynamic classification of Indian cities:
+| Tier      | Multiplier  | Description     |
+| --------- | ----------- | --------------- |
+| Tier 1    | 4.0x        | Premium metros  |
+| Tier 2    | 3.2x        | Emerging metros |
+| Tier 3–5  | 2.6x – 1.9x | Growth cities   |
+| Tier 6–8  | 1.7x – 1.3x | Developing      |
+| Tier 9–10 | 1.2x – 1.1x | Low liquidity   |
 
-The "Fine-Grain" precision of this engine is derived from high-dimensional latent artifacts:
+✔ Automatically applied based on location input
+✔ Real-world pricing simulation
 
-1. **📂 Neural Weight Tensors (`model_weights.bin`)**
-   * **Dimension:** 25,000 Active Parameters.
-   * **Function:** Defines non-linear relationships between urban infrastructure and structural quality.
+🧠 AI Explainability (Stable XAI)
 
-2. **🗺️ Elite Registry Atlas (`elite_registry.json`)**
-   * **Coverage:** 100+ Premium Indian Micro-markets.
-   * **Benchmarks:** Tier 1 (₹30k), Tier 2 (₹22k), Tier 3 (₹10.5k).
+Instead of unstable SHAP for multimodal models:
 
-3. **🛰️ Connectivity Vectors**
-   * **Function:** Simulates "Reachability" using geospatial coordinates to calculate walkability and transit-oriented development (TOD) premiums.
+✔ Feature Contribution Visualization
+✔ BHK vs Area vs Structure importance
+✔ Interpretable surrogate explanation
+📊 Advanced Analytics Dashboard
 
-Multimodal House Price Prediction System Architecture 
+Below-map intelligence layer includes:
 
-                ┌──────────────────────────┐
-                │      Tabular Data        │
-                │ (house_data.csv file)   │
-                │ Features:               │
-                │ - Bedrooms              │
-                │ - Area (sqft)           │
-                │ - Location              │
-                │ - Price (Target)        │
-                └────────────┬────────────┘
-                             │
-                             ▼
-                ┌──────────────────────────┐
-                │   Feature Processing     │
-                │ (Scaling / Cleaning)     │
-                └────────────┬────────────┘
-                             │
-                             ▼
-                ┌──────────────────────────┐
-                │  Tabular Feature Vector  │
-                └────────────┬────────────┘
+💰 Price Breakdown (Base + Premium + Growth)
+📈 5-Year ROI Projection
+🏙️ Area Intelligence Radar (Safety, Greenery, Transit)
+📊 Market Trends Simulation
+🧠 AI Investment Recommendations
+🧠 Smart AI Recommendation Engine
 
+Dynamic decision support based on:
 
-                ┌──────────────────────────┐
-                │       Image Data         │
-                │  (data/images/*.jpg)     │
-                │ via image_name column    │
-                └────────────┬────────────┘
-                             │
-                             ▼
-                ┌──────────────────────────┐
-                │      CNN Model           │
-                │ Conv → Pool → Dense      │
-                │ Extract Image Features   │
-                └────────────┬────────────┘
-                             │
-                             ▼
-                ┌──────────────────────────┐
-                │   Image Feature Vector   │
-                └────────────┬────────────┘
+City Tier
+Safety score
+Transit accessibility
 
+Example outputs:
 
-                    ┌────────▼────────┐
-                    │  Feature Fusion │
-                    │ (Concatenation) │
-                    └────────┬────────┘
-                             │
-                             ▼
-                ┌──────────────────────────┐
-                │   Fully Connected NN     │
-                │   (Dense Layers)         │
-                └────────────┬────────────┘
-                             │
-                             ▼
-                ┌──────────────────────────┐
-                │ Predicted House Price    │
-                └──────────────────────────┘
+🚀 “Premium investment zone”
+📈 “Emerging growth market”
+⚠️ “High-risk low-liquidity zone”
 
-    
-📊 Model Architecture Overview
-The inference process follows a strict **Multimodal Feed-Forward** pipeline:
-1. **Input Layer:** Structural (BHK/SqFt) + Geospatial (NDVI/Safety/Transit).
-2. **Hidden Layer 1 (L1):** Feature Cross-Correlation (Linear + ReLU).
-3. **Hidden Layer 2 (L2):** Latent Vector Fusion (**25k Tensors**).
-4. **Output Head:** Valuation Synthesis with Indian Denomination Scaling.
+🏗️ System Architecture:
+Tabular Data (BHK, SqFt, Location)
+            │
+            ▼
+   Feature Processing
+            │
+            ▼
+   Tabular Neural Network
+            │
 
-🛠️ Technical Stack
-* **Frontend:** Streamlit (Jewel-Tone Montserrat UI)
-* **Geospatial:** PyDeck (Mapbox Navigation-Night Engine), Geopy
-* **Analytics:** Plotly Graph Objects (Polar Radars, SHAP Bar Charts)
-* **Backend:** FastAPI (Prediction Endpoint)
+Image Data (House Images)
+            │
+            ▼
+      CNN (ResNet18)
+            │
 
- 🚀 Installation & Setup
+      Feature Fusion
+ (Concatenation Layer)
+            │
+            ▼
+   Fully Connected Layers
+            │
+            ▼
+  Final Price Prediction
 
-```bash
-# 1. Clone the Repository
-git clone [https://github.com/YeswanthVelpuru/Multimodal_Geospatial_House_Price_Project.git](https://github.com/YeswanthVelpuru/Multimodal_Geospatial_House_Price_Project.git)
+  📊 Model Architecture
+CNN Backbone: ResNet18
+Tabular Network: Fully Connected Layers
+Fusion: Concatenation + Dense Layers
+Loss: Mean Squared Error (MSE)
+
+📈 Model Evaluation Metrics
+| Metric   | Description        |
+| -------- | ------------------ |
+| RMSE     | Error magnitude    |
+| MAE      | Absolute deviation |
+| R² Score | Model accuracy     |
+
+🧪 Model Comparison
+| Model             | RMSE   | R²         |
+| ----------------- | ------ | ---------- |
+| ML (RandomForest) | High   | Medium     |
+| Deep Learning     | Medium | High       |
+| Geospatial DL     | Lowest | Highest 🚀 |
+
+🛠️ Tech Stack
+🔹 Frontend
+Streamlit (Interactive Dashboard)
+🔹 Deep Learning
+PyTorch
+Torchvision (ResNet18)
+🔹 Geospatial
+PyDeck (Mapbox)
+Geopy
+🔹 Visualization
+Plotly
+Radar, Bar, ROI graphs
+🔹 Backend (Optional)
+FastAPI
+🔹 CI/CD
+GitHub Actions
+flake8 (lint)
+pytest (testing)
+
+📂 Project Structure
+├── app.py                  # Streamlit UI
+├── train.py               # DL training pipeline
+├── models/
+│   ├── cnn_model.py
+│   ├── tabular_model.py
+│   └── multimodal_model.py
+├── data/
+│   ├── dataset.py
+│   └── data.csv
+├── evaluation/
+├── explainability/
+├── compare.py
+├── requirements.txt
+└── README.md
+
+🚀 Installation & Setup
+# Clone repository
+git clone https://github.com/YeswanthVelpuru/Multimodal_Geospatial_House_Price_Project.git
+
 cd Multimodal_Geospatial_House_Price_Project
 
-# 2. Install Dependencies
-pip install streamlit pandas pydeck plotly numpy geopy fastapi uvicorn pydantic
+# Install dependencies
+pip install -r requirements.txt
 
-# 3. Run the Application
+# Run app
 streamlit run app.py
 
-Category,Features,Impact on Valuation
-Structural,"BHK, SqFt, Arch. Grade, Smart Core",Primary Base Value
-Geospatial,"NDVI Index, Transit Node Proximity",DNA Multiplier
-Reachability,10-min Walk / 15-min Drive Radius,Accessibility Premium
-Investment,"Rental Yield, Liquidity Score",Financial Sentiment
+🌐 Deployment
+Streamlit Cloud ready
+GitHub Actions CI integrated
+Mapbox API enabled
 
-## Deep Learning Module
+⚠️ Note
 
-- CNN model implemented using TensorFlow
-- Processes image data from data/images/
-- Handles missing images using fallback mechanism
-- Trained using train.py
+Dataset and images are excluded to keep repository lightweight.
+
+🧠 Key Innovation
+
+“Fusion of Multimodal Deep Learning with Geospatial Reachability and Tier-Based Market Intelligence for fine-grain urban price prediction.”
+
+🏆 Highlights
+
+✔ Multimodal AI
+✔ Geospatial analytics
+✔ Explainable AI
+✔ Market-aware pricing
+✔ Production-ready system
+
+Dynamic classification of Indian cities:
