@@ -1,5 +1,4 @@
-🛰️ Multimodal Geospatial Deep Learning
-Fine-Grain Urban House Price Prediction (India)
+🛰️ Multimodal Geospatial Deep Learning for Fine-Grain Urban House Price Prediction
 
 A production-grade AI system that predicts house prices using Multimodal Deep Learning + Geospatial Intelligence + Market Tier Modeling.
 
