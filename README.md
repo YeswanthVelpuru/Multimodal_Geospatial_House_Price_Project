@@ -162,16 +162,11 @@ Streamlit Cloud ready
 GitHub Actions CI integrated
 Mapbox API enabled
 
-⚠️ Note
+⚠️ Note : Dataset and images are excluded to keep repository lightweight.
 
-Dataset and images are excluded to keep repository lightweight.
-
-🧠 Key Innovation
-
-“Fusion of Multimodal Deep Learning with Geospatial Reachability and Tier-Based Market Intelligence for fine-grain urban price prediction.”
+🧠 Key Innovation : “Fusion of Multimodal Deep Learning with Geospatial Reachability and Tier-Based Market Intelligence for fine-grain urban price prediction.”
 
 🏆 Highlights
-
 ✔ Multimodal AI
 ✔ Geospatial analytics
 ✔ Explainable AI
