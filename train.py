@@ -1,37 +1,91 @@
-import pandas as pd
-import cv2
+import torch
+from torch.utils.data import DataLoader, random_split
+from models.multimodal_model import MultiModalModel
+from data.dataset import HouseDataset
+import torchvision.transforms as transforms
+
+from sklearn.metrics import mean_squared_error, mean_absolute_error, r2_score
 import numpy as np
-from cnn_model import create_cnn
+import matplotlib.pyplot as plt
 
-# Load CSV
-data = pd.read_csv("data/house_data.csv")
+# ---------------- TRANSFORM ----------------
+transform = transforms.Compose([
+    transforms.Resize((224, 224)),
+    transforms.ToTensor()
+])
 
-images = []
-prices = []
+# ---------------- DATASET ----------------
+dataset = HouseDataset("data/data.csv", "data/images", transform)
 
-for i, row in data.iterrows():
-    img_name = row.get('image_name', 'img1.jpg')
+# 🔥 TRAIN / VALIDATION SPLIT
+train_size = int(0.8 * len(dataset))
+val_size = len(dataset) - train_size
 
-    if pd.isna(img_name):
-        img_name = 'img1.jpg'
+train_dataset, val_dataset = random_split(dataset, [train_size, val_size])
 
-    img_path = f"data/images/{img_name}"
-    img = cv2.imread(img_path)
+# 🔥 DATALOADERS
+train_loader = DataLoader(train_dataset, batch_size=16, shuffle=True)
+val_loader = DataLoader(val_dataset, batch_size=16)
 
-    if img is None:
-        img = np.zeros((128,128,3))  # fallback
-    else:
-        img = cv2.resize(img, (128,128))
+# ---------------- MODEL ----------------
+model = MultiModalModel(tabular_input_size=3)
+criterion = torch.nn.MSELoss()
+optimizer = torch.optim.Adam(model.parameters(), lr=0.001)
 
-    images.append(img)
+# 🔥 LOSS TRACKING
+train_losses = []
 
-    # make sure 'price' column exists
-    prices.append(row['price'])
+# ---------------- TRAINING ----------------
+for epoch in range(10):
+    model.train()
+    epoch_loss = 0
 
-# Convert to arrays
-X = np.array(images) / 255.0
-y = np.array(prices)
+    for img, tab, price in train_loader:
+        output = model(img, tab)
+        loss = criterion(output.squeeze(), price)
 
-# Train CNN
-model = create_cnn()
-model.fit(X, y, epochs=5)
+        optimizer.zero_grad()
+        loss.backward()
+        optimizer.step()
+
+        epoch_loss += loss.item()
+
+    avg_loss = epoch_loss / len(train_loader)
+    train_losses.append(avg_loss)
+
+    print(f"Epoch {epoch} Loss: {avg_loss:.4f}")
+
+# ---------------- SAVE MODEL ----------------
+torch.save(model.state_dict(), "model.pth")
+
+# ---------------- VALIDATION ----------------
+model.eval()
+
+y_true = []
+y_pred = []
+
+with torch.no_grad():
+    for img, tab, price in val_loader:
+        output = model(img, tab)
+
+        # 🔥 FIXED (no 0-d error)
+        y_true.extend(price.view(-1).numpy())
+        y_pred.extend(output.view(-1).numpy())
+
+# ---------------- METRICS ----------------
+rmse = np.sqrt(mean_squared_error(y_true, y_pred))
+mae = mean_absolute_error(y_true, y_pred)
+r2 = r2_score(y_true, y_pred)
+
+print("\n📊 MODEL PERFORMANCE (Validation Set):")
+print(f"RMSE: {rmse:.4f}")
+print(f"MAE: {mae:.4f}")
+print(f"R2 Score: {r2:.4f}")
+
+# ---------------- LOSS GRAPH ----------------
+plt.plot(train_losses)
+plt.title("Training Loss Curve")
+plt.xlabel("Epoch")
+plt.ylabel("Loss")
+plt.grid()
+plt.show()

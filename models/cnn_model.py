@@ -1,14 +1,19 @@
 import torch
 import torch.nn as nn
-import torchvision.models as models
+from torchvision.models import resnet18, ResNet18_Weights
+
 
 class CNNModel(nn.Module):
     def __init__(self):
         super(CNNModel, self).__init__()
-        
-        base_model = models.resnet18(pretrained=True)
+
+        # Load pretrained ResNet18
+        base_model = resnet18(weights=ResNet18_Weights.DEFAULT)
+
+        # Remove final classification layer
         self.feature_extractor = nn.Sequential(*list(base_model.children())[:-1])
-        
+
+        # New fully connected layer
         self.fc = nn.Linear(512, 128)
 
     def forward(self, x):
