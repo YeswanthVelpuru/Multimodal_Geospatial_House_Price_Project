@@ -90,7 +90,7 @@ Image Data (House Images)
             ▼
   Final Price Prediction
 
-  📊 Model Architecture
+📊 Model Architecture
 CNN Backbone: ResNet18
 Tabular Network: Fully Connected Layers
 Fusion: Concatenation + Dense Layers
@@ -177,5 +177,4 @@ Dataset and images are excluded to keep repository lightweight.
 ✔ Explainable AI
 ✔ Market-aware pricing
 ✔ Production-ready system
-
 Dynamic classification of Indian cities:
