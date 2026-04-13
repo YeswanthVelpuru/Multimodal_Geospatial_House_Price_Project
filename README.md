@@ -32,7 +32,7 @@ The "Fine-Grain" precision of this engine is derived from high-dimensional laten
      
 Multimodal_Geospatial_House_Price_Project Structure /
 │
-├── 📁 data/                         ✅ NEW (Important)
+├── 📁 data/                        
 │   ├── house_data.csv              ← main dataset
 │   └── 📁 images/
 │       └── img1.jpg                ← CNN input image
@@ -49,7 +49,7 @@ Multimodal_Geospatial_House_Price_Project Structure /
 ├── 📁 dl_env/                      (virtual environment)
 ├── 📁 .github/                     (CI/CD configs)
 │
-├── 📄 train.py                     ✅ UPDATED (CNN training)
+├── 📄 train.py                     
 ├── 📄 model_training.py            (ML baseline)
 ├── 📄 data_processing.py           (preprocessing)
 ├── 📄 image_features.py            (image handling logic)
@@ -62,7 +62,7 @@ Multimodal_Geospatial_House_Price_Project Structure /
 ├── 📄 test_api.py                  (testing)
 │
 ├── 📄 requirements.txt             (dependencies)
-├── 📄 README.md                    ✅ MUST UPDATE
+├── 📄 README.md                    
 ├── 📄 .gitignore
 │
 ├── 📄 house_price_model.pth        (PyTorch model)
@@ -71,7 +71,7 @@ Multimodal_Geospatial_House_Price_Project Structure /
 ├── 📄 model.onnx
 ├── 📄 scaler.pkl
 │
-└── 📄 train_dl.py (optional)       (if you separate DL training)
+└── 📄 train_dl.py (optional)       
 
 📊 Model Architecture Overview
 The inference process follows a strict **Multimodal Feed-Forward** pipeline:
