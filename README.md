@@ -29,49 +29,27 @@ The "Fine-Grain" precision of this engine is derived from high-dimensional laten
 3. **🛰️ Connectivity Vectors**
    * **Function:** Simulates "Reachability" using geospatial coordinates to calculate walkability and transit-oriented development (TOD) premiums.
 
-     
-Multimodal_Geospatial_House_Price_Project Structure /
-│
-├── 📁 data/                        
-│   ├── house_data.csv              ← main dataset
-│   └── 📁 images/
-│       └── img1.jpg                ← CNN input image
-│
-├── 📁 dataset/                     (original dataset folder)
-│   └── houses.csv
-│
-├── 📁 models/
-│   ├── cnn_model.py                ✅ Deep Learning (CNN)
-│   └── (other saved models)
-│
-├── 📁 mlruns/                      (MLflow tracking)
-├── 📁 processed/                   (processed data)
-├── 📁 dl_env/                      (virtual environment)
-├── 📁 .github/                     (CI/CD configs)
-│
-├── 📄 train.py                     
-├── 📄 model_training.py            (ML baseline)
-├── 📄 data_processing.py           (preprocessing)
-├── 📄 image_features.py            (image handling logic)
-├── 📄 graph_features.py            (GNN/geo features)
-├── 📄 market_features.py           (market data)
-├── 📄 rl_price_trend.py            (RL trends)
-│
-├── 📄 app.py                       (Streamlit UI)
-├── 📄 api.py                       (API endpoint)
-├── 📄 test_api.py                  (testing)
-│
-├── 📄 requirements.txt             (dependencies)
-├── 📄 README.md                    
-├── 📄 .gitignore
-│
-├── 📄 house_price_model.pth        (PyTorch model)
-├── 📄 house_price_model.pt
-├── 📄 house_price_model.onnx
-├── 📄 model.onnx
-├── 📄 scaler.pkl
-│
-└── 📄 train_dl.py (optional)       
+## 🧠 System Architecture (Multimodal Deep Learning)
+
+```mermaid
+flowchart TD
+
+    A[CSV Dataset<br>(house_data.csv)] --> B[Data Preprocessing]
+    B --> C[Tabular Features<br>(Area, BHK, Location, etc.)]
+
+    A --> D[Image Mapping<br>(image_name)]
+    D --> E[Image Loader<br>(data/images)]
+    E --> F[CNN Model<br>(Convolutional Neural Network)]
+
+    C --> G[Feature Combination Layer]
+    F --> G
+
+    G --> H[Prediction Layer]
+    H --> I[House Price Output]
+
+    style F fill:#ffcccc,stroke:#333,stroke-width:2px
+    style G fill:#ccffcc,stroke:#333,stroke-width:2px
+    style H fill:#ccccff,stroke:#333,stroke-width:2px     
 
 📊 Model Architecture Overview
 The inference process follows a strict **Multimodal Feed-Forward** pipeline:
