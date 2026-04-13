@@ -6,20 +6,34 @@ import numpy as np
 import random
 import torch
 from geopy.geocoders import Nominatim
-import os
 import pandas as pd
+import os
 
+# ✅ ADD THIS IMPORT (MISSING)
 from models.multimodal_model import MultiModalModel
 
-st.set_page_config(page_title="Geospatial DL Elite", layout="wide")
 
 # ---------------- MAPBOX ----------------
 os.environ["MAPBOX_API_KEY"] = "pk.eyJ1IjoieWVzd2FudGgtLXYtLTIwMDMiLCJhIjoiY21taHh5ZmJtMHRneDJwczZxaWhiYmg3ZiJ9.IZK_WUOAlFdAsg0ewYyARg"
 
 # ---------------- MODEL ----------------
 model = MultiModalModel(tabular_input_size=3)
-model.load_state_dict(torch.load("model.pth", map_location="cpu"))
-model.eval()
+
+# ✅ ADD SAFE LOADING (OPTION 3)
+try:
+    model.load_state_dict(torch.load("model.pth", map_location="cpu"))
+    model.eval()
+    model_loaded = True
+except:
+    st.warning("⚠️ Model not found. Running in demo mode.")
+
+    class DummyModel:
+        def __call__(self, img, tab):
+            return torch.tensor([[tab.sum().item() * 100000]])
+
+    model = DummyModel()
+    model_loaded = False
+
 
 # ---------------- PRICE FORMAT ----------------
 def format_price(x):
@@ -43,7 +57,6 @@ tier_map = {
     "Tier 10": ["Ajmer", "Guntur", "Kota", "Rourkela"]
 }
 
-# 🔥 Multipliers (realistic descending scale)
 tier_multiplier = {
     "Tier 1": 4.0,
     "Tier 2": 3.2,
@@ -152,7 +165,6 @@ st.subheader("📊 Deep Insights Dashboard")
 
 col1, col2, col3 = st.columns(3)
 
-# Price Breakdown
 with col1:
     if 'price' in locals():
         base = sqft * 8000
@@ -164,7 +176,6 @@ with col1:
                      title="Price Composition")
         st.plotly_chart(fig, use_container_width=True)
 
-# ROI
 with col2:
     years = np.arange(1, 6)
     roi = [price * (1 + 0.12*i) for i in years] if 'price' in locals() else [0]*5
@@ -172,7 +183,6 @@ with col2:
     fig = px.line(x=years, y=roi, title="5-Year ROI Projection")
     st.plotly_chart(fig, use_container_width=True)
 
-# Radar
 with col3:
     metrics = ["Safety", "Green", "Transit"]
     vals = [safety, greenery, transit]
