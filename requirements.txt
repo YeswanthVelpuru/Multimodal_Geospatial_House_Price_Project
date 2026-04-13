@@ -10,3 +10,7 @@ Pillow
 pydeck
 plotly
 geopy
+fastapi
+uvicorn
+pytest
+httpx
