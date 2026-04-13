@@ -45,29 +45,88 @@ def format_price(x):
 
 # ---------------- CITY TIERS ----------------
 tier_map = {
-    "Tier 1": ["Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai"],
-    "Tier 2": ["Pune", "Ahmedabad", "Chandigarh"],
-    "Tier 3": ["Lucknow", "Kanpur", "Indore", "Nagpur"],
-    "Tier 4": ["Patna", "Bhopal", "Ludhiana", "Agra"],
-    "Tier 5": ["Varanasi", "Amritsar", "Allahabad", "Nashik"],
-    "Tier 6": ["Dehradun", "Jodhpur", "Raipur", "Visakhapatnam"],
-    "Tier 7": ["Guwahati", "Mysore", "Coimbatore", "Vijayawada"],
-    "Tier 8": ["Jabalpur", "Madurai", "Gwalior", "Tiruchirappalli"],
-    "Tier 9": ["Ujjain", "Salem", "Warangal", "Dhanbad"],
-    "Tier 10": ["Ajmer", "Guntur", "Kota", "Rourkela"]
+    "Tier 1": [
+        "Mumbai", "Delhi", "Bangalore", "Hyderabad", "Chennai", 
+        "Kolkata", "Pune", "Ahmedabad", "Gurgaon", "Noida", 
+        "Navi Mumbai", "Thane", "Greater Noida", "Faridabad", "Ghaziabad"
+    ],
+    "Tier 2": [
+        "Jaipur", "Surat", "Lucknow", "Nagpur", "Indore", 
+        "Kochi", "Chandigarh", "Coimbatore", "Visakhapatnam", "Patna", 
+        "Vadodara", "Thiruvananthapuram", "Bhopal", "Ludhiana", "Agra",
+        "Nashik", "Kanpur", "Raipur", "Bhubaneswar", "Guwahati",
+        "Mysore", "Rajkot", "Meerut", "Amritsar", "Varanasi"
+    ],
+    "Tier 3": [
+        "Srinagar", "Aurangabad", "Dhanbad", "Gwalior", "Jabalpur", 
+        "Vijayawada", "Jodhpur", "Madurai", "Kota", "Hubli-Dharwad", 
+        "Solapur", "Bareilly", "Tiruchirappalli", "Salem", "Warangal", 
+        "Guntur", "Aligarh", "Jalandhar", "Moradabad", "Bhiwandi", 
+        "Saharanpur", "Gorakhpur", "Bikaner", "Amravati", "Jamshedpur"
+    ],
+    "Tier 4": [
+        "Bhilai", "Cuttack", "Firozabad", "Nellore", "Mangalore", 
+        "Belgaum", "Bhavnagar", "Dehradun", "Tiruppur", "Rourkela", 
+        "Ajmer", "Akola", "Gulbarga", "Jamnagar", "Ujjain", 
+        "Loni", "Siliguri", "Jhansi", "Ulhasnagar", "Jammu", 
+        "Sangli", "Kurnool", "Davangere", "Tirunelveli", "Malegaon"
+    ],
+    "Tier 5": [
+        "Gaya", "Ambattur", "Udaipur", "Kakinada", "Tirupati", 
+        "Anantapur", "Nizamabad", "Gandhinagar", "Sagar", "Bijapur", 
+        "Karimnagar", "Shimoga", "Tumkur", "Ahmednagar", "Dhule", 
+        "Korba", "Bhilwara", "Brahmapur", "Muzaffarpur", "Puducherry", 
+        "Mathura", "Kollam", "Alwar", "Rajahmundry", "Ongole"
+    ],
+    "Tier 6": [
+        "Shimla", "Panjim", "Gangtok", "Itanagar", "Shillong", 
+        "Agartala", "Aizawl", "Kohima", "Imphal", "Port Blair", 
+        "Rohtak", "Panipat", "Karnal", "Bathinda", "Kapurthala", 
+        "Rewari", "Banswara", "Datia", "Nagda", "Sujangarh", 
+        "Kasganj", "Bhadreswar", "Chilakaluripet", "Kalyani", "Chittorgarh"
+    ],
+    "Tier 7": [
+        "Haridwar", "Sikar", "Dibrugarh", "Munger", "Purnia", 
+        "Haldwani", "Khandwa", "Raichur", "Hospet", "Bhuj", 
+        "Gandhidham", "Anand", "Vapi", "Bharuch", "Porbandar", 
+        "Nadiad", "Mehsana", "Morbi", "Surendranagar", "Veraval", 
+        "Valsad", "Navsari", "Godhra", "Patan", "Kalol"
+    ],
+    "Tier 8": [
+        "Hosur", "Ambur", "Vellore", "Erode", "Thanjavur", 
+        "Dindigul", "Nagercoil", "Kancheepuram", "Karaikudi", "Neyveli", 
+        "Cuddalore", "Kumbakonam", "Sivakasi", "Pollachi", "Rajapalayam", 
+        "Gudiyatham", "Pudukkottai", "Vaniyambadi", "Amreli", "Junagadh", 
+        "Botad", "Jetpur", "Gondal", "Palitana", "Mahuva"
+    ],
+    "Tier 9": [
+        "Sambalpur", "Balasore", "Bhadrak", "Baripada", "Puri", 
+        "Angul", "Jharsuguda", "Paradip", "Jajpur", "Keonjhar", 
+        "Dharamsala", "Solan", "Mandi", "Hamirpur", "Kullu", 
+        "Chamba", "Bilaspur", "Una", "Paonta Sahib", "Nahan", 
+        "Tuni", "Amalapuram", "Pithapuram", "Samalkot", "Mandapeta"
+    ],
+    "Tier 10": [
+        "Kavali", "Kandukur", "Addanki", "Chirala", "Markapur", 
+        "Kanigiri", "Giddalur", "Podili", "Darsi", "Donakonda", 
+        "Yerragondapalem", "Pamuru", "Bestavaripeta", "Cumbum", "Martur", 
+        "Mundlamuru", "Konakanamitla", "Santhamaguluru", "Ballikurava", "Parchur", 
+        "Korisapadu", "Inkollu", "Janakavaram Panguluru", "Naguluppalapadu", "Maddipadu"
+    ]
 }
+
 
 tier_multiplier = {
     "Tier 1": 4.0,
-    "Tier 2": 3.2,
-    "Tier 3": 2.6,
-    "Tier 4": 2.2,
-    "Tier 5": 1.9,
-    "Tier 6": 1.7,
-    "Tier 7": 1.5,
-    "Tier 8": 1.3,
-    "Tier 9": 1.2,
-    "Tier 10": 1.1
+    "Tier 2": 3.8,
+    "Tier 3": 3.6,
+    "Tier 4": 3.4,
+    "Tier 5": 2.9,
+    "Tier 6": 2.5,
+    "Tier 7": 2.2,
+    "Tier 8": 1.9,
+    "Tier 9": 1.6,
+    "Tier 10": 1.4
 }
 
 # ---------------- SIDEBAR ----------------
