@@ -31,26 +31,25 @@ The "Fine-Grain" precision of this engine is derived from high-dimensional laten
 
 ## 🧠 System Architecture (Multimodal Deep Learning)
 
+## 🧠 System Architecture (Multimodal Deep Learning)
+
 ```mermaid
 flowchart TD
 
-    A[CSV Dataset<br>(house_data.csv)] --> B[Data Preprocessing]
-    B --> C[Tabular Features<br>(Area, BHK, Location, etc.)]
+    A[CSV Dataset house_data.csv] --> B[Data Preprocessing]
+    B --> C[Tabular Features Area BHK Location]
 
-    A --> D[Image Mapping<br>(image_name)]
-    D --> E[Image Loader<br>(data/images)]
-    E --> F[CNN Model<br>(Convolutional Neural Network)]
+    A --> D[Image Mapping image_name]
+    D --> E[Image Loader data/images]
+    E --> F[CNN Model Deep Learning]
 
-    C --> G[Feature Combination Layer]
+    C --> G[Feature Fusion Layer]
     F --> G
 
     G --> H[Prediction Layer]
     H --> I[House Price Output]
 
-    style F fill:#ffcccc,stroke:#333,stroke-width:2px
-    style G fill:#ccffcc,stroke:#333,stroke-width:2px
-    style H fill:#ccccff,stroke:#333,stroke-width:2px     
-
+    
 📊 Model Architecture Overview
 The inference process follows a strict **Multimodal Feed-Forward** pipeline:
 1. **Input Layer:** Structural (BHK/SqFt) + Geospatial (NDVI/Safety/Transit).
