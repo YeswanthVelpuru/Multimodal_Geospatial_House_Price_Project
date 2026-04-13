@@ -30,6 +30,7 @@ The "Fine-Grain" precision of this engine is derived from high-dimensional laten
    * **Function:** Simulates "Reachability" using geospatial coordinates to calculate walkability and transit-oriented development (TOD) premiums.
 
 Multimodal House Price Prediction System Architecture 
+
                 ┌──────────────────────────┐
                 │      Tabular Data        │
                 │ (house_data.csv file)   │
