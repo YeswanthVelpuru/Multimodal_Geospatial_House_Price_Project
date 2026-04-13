@@ -2,8 +2,6 @@
 
 A high-fidelity **Neural Inference Dashboard** designed to predict house prices in the Indian market with "fine-grain" precision. By fusing structural architectural data with geospatial "Reachability" layers, the model provides hyper-localized valuations across major Indian metros.
 
-
-
 💎 Core Features
 
 🧠 Neural Inference & Explainability
@@ -31,7 +29,51 @@ The "Fine-Grain" precision of this engine is derived from high-dimensional laten
 3. **🛰️ Connectivity Vectors**
    * **Function:** Simulates "Reachability" using geospatial coordinates to calculate walkability and transit-oriented development (TOD) premiums.
 
- 📊 Model Architecture Overview
+     
+Multimodal_Geospatial_House_Price_Project Structure /
+│
+├── 📁 data/                         ✅ NEW (Important)
+│   ├── house_data.csv              ← main dataset
+│   └── 📁 images/
+│       └── img1.jpg                ← CNN input image
+│
+├── 📁 dataset/                     (original dataset folder)
+│   └── houses.csv
+│
+├── 📁 models/
+│   ├── cnn_model.py                ✅ Deep Learning (CNN)
+│   └── (other saved models)
+│
+├── 📁 mlruns/                      (MLflow tracking)
+├── 📁 processed/                   (processed data)
+├── 📁 dl_env/                      (virtual environment)
+├── 📁 .github/                     (CI/CD configs)
+│
+├── 📄 train.py                     ✅ UPDATED (CNN training)
+├── 📄 model_training.py            (ML baseline)
+├── 📄 data_processing.py           (preprocessing)
+├── 📄 image_features.py            (image handling logic)
+├── 📄 graph_features.py            (GNN/geo features)
+├── 📄 market_features.py           (market data)
+├── 📄 rl_price_trend.py            (RL trends)
+│
+├── 📄 app.py                       (Streamlit UI)
+├── 📄 api.py                       (API endpoint)
+├── 📄 test_api.py                  (testing)
+│
+├── 📄 requirements.txt             (dependencies)
+├── 📄 README.md                    ✅ MUST UPDATE
+├── 📄 .gitignore
+│
+├── 📄 house_price_model.pth        (PyTorch model)
+├── 📄 house_price_model.pt
+├── 📄 house_price_model.onnx
+├── 📄 model.onnx
+├── 📄 scaler.pkl
+│
+└── 📄 train_dl.py (optional)       (if you separate DL training)
+
+📊 Model Architecture Overview
 The inference process follows a strict **Multimodal Feed-Forward** pipeline:
 1. **Input Layer:** Structural (BHK/SqFt) + Geospatial (NDVI/Safety/Transit).
 2. **Hidden Layer 1 (L1):** Feature Cross-Correlation (Linear + ReLU).
