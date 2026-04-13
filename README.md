@@ -177,4 +177,4 @@ Dataset and images are excluded to keep repository lightweight.
 ✔ Explainable AI
 ✔ Market-aware pricing
 ✔ Production-ready system
-Dynamic classification of Indian cities:
+of Indian cities:
