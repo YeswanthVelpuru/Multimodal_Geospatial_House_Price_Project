@@ -29,25 +29,63 @@ The "Fine-Grain" precision of this engine is derived from high-dimensional laten
 3. **🛰️ Connectivity Vectors**
    * **Function:** Simulates "Reachability" using geospatial coordinates to calculate walkability and transit-oriented development (TOD) premiums.
 
-## 🧠 System Architecture (Multimodal Deep Learning)
+Multimodal House Price Prediction System Architecture 
+                ┌──────────────────────────┐
+                │      Tabular Data        │
+                │ (house_data.csv file)   │
+                │ Features:               │
+                │ - Bedrooms              │
+                │ - Area (sqft)           │
+                │ - Location              │
+                │ - Price (Target)        │
+                └────────────┬────────────┘
+                             │
+                             ▼
+                ┌──────────────────────────┐
+                │   Feature Processing     │
+                │ (Scaling / Cleaning)     │
+                └────────────┬────────────┘
+                             │
+                             ▼
+                ┌──────────────────────────┐
+                │  Tabular Feature Vector  │
+                └────────────┬────────────┘
 
-## 🧠 System Architecture (Multimodal Deep Learning)
 
-```mermaid
-flowchart TD
+                ┌──────────────────────────┐
+                │       Image Data         │
+                │  (data/images/*.jpg)     │
+                │ via image_name column    │
+                └────────────┬────────────┘
+                             │
+                             ▼
+                ┌──────────────────────────┐
+                │      CNN Model           │
+                │ Conv → Pool → Dense      │
+                │ Extract Image Features   │
+                └────────────┬────────────┘
+                             │
+                             ▼
+                ┌──────────────────────────┐
+                │   Image Feature Vector   │
+                └────────────┬────────────┘
 
-    A[CSV Dataset house_data.csv] --> B[Data Preprocessing]
-    B --> C[Tabular Features Area BHK Location]
 
-    A --> D[Image Mapping image_name]
-    D --> E[Image Loader data/images]
-    E --> F[CNN Model Deep Learning]
-
-    C --> G[Feature Fusion Layer]
-    F --> G
-
-    G --> H[Prediction Layer]
-    H --> I[House Price Output]
+                    ┌────────▼────────┐
+                    │  Feature Fusion │
+                    │ (Concatenation) │
+                    └────────┬────────┘
+                             │
+                             ▼
+                ┌──────────────────────────┐
+                │   Fully Connected NN     │
+                │   (Dense Layers)         │
+                └────────────┬────────────┘
+                             │
+                             ▼
+                ┌──────────────────────────┐
+                │ Predicted House Price    │
+                └──────────────────────────┘
 
     
 📊 Model Architecture Overview
