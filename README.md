@@ -62,3 +62,10 @@ Structural,"BHK, SqFt, Arch. Grade, Smart Core",Primary Base Value
 Geospatial,"NDVI Index, Transit Node Proximity",DNA Multiplier
 Reachability,10-min Walk / 15-min Drive Radius,Accessibility Premium
 Investment,"Rental Yield, Liquidity Score",Financial Sentiment
+
+## Deep Learning Module
+
+- CNN model implemented using TensorFlow
+- Processes image data from data/images/
+- Handles missing images using fallback mechanism
+- Trained using train.py
