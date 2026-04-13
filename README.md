@@ -165,11 +165,4 @@ Mapbox API enabled
 ⚠️ Note : Dataset and images are excluded to keep repository lightweight.
 
 🧠 Key Innovation : “Fusion of Multimodal Deep Learning with Geospatial Reachability and Tier-Based Market Intelligence for fine-grain urban price prediction.”
-
-🏆 Highlights
-✔ Multimodal AI
-✔ Geospatial analytics
-✔ Explainable AI
-✔ Market-aware pricing
-✔ Production-ready system
 of Indian cities:
