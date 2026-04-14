@@ -128,21 +128,101 @@ GitHub Actions
 flake8 (lint)
 pytest (testing)
 
-📂 Project Structure
-├── app.py                  # Streamlit UI
-├── train.py               # DL training pipeline
-├── models/
-│   ├── cnn_model.py
-│   ├── tabular_model.py
-│   └── multimodal_model.py
+Multimodal_Geospatial_House_Price_Project/
+│
+├── .github/
+│   └── workflows/
+│       └── python-package.yml
+│
 ├── data/
+│   ├── __init__.py
+│   ├── data.csv
+│   ├── house_data.csv
 │   ├── dataset.py
-│   └── data.csv
+│   ├── generate_images.py
+│   │
+│   ├── images/
+│   │   ├── house1.jpg
+│   │   ├── house2.jpg
+│   │   ├── house3.jpg
+│   │   ├── house4.jpg
+│   │   └── house5.jpg
+│   │
+│   └── (additional images folder)
+│       ├── house1.jpg
+│       ├── house2.jpg
+│       └── house3.jpg
+│
 ├── evaluation/
+│   ├── __init__.py
+│   └── model_comparison.py
+│
 ├── explainability/
+│   ├── __init__.py
+│   └── shap_explainer.py
+│
+├── mlruns/
+│   └── 0/
+│       └── models/
+│           ├── m-6878ea32100d48709988560d67a9beb4/
+│           │   └── artifacts/
+│           │       ├── MLmodel
+│           │       ├── conda.yaml
+│           │       ├── model.pkl
+│           │       ├── python_env.yaml
+│           │       └── requirements.txt
+│           │
+│           ├── m-6fd1d7d3c8a14a5184540b7b6351d72f/
+│           │   └── artifacts/
+│           │       ├── MLmodel
+│           │       ├── conda.yaml
+│           │       ├── model.pkl
+│           │       ├── python_env.yaml
+│           │       └── requirements.txt
+│           │
+│           └── m-ae33271ca51149d788e2ec78f5079c7e/
+│               └── artifacts/
+│                   ├── MLmodel
+│                   ├── conda.yaml
+│                   ├── model.pkl
+│                   ├── python_env.yaml
+│                   └── requirements.txt
+│
+├── models/
+│   ├── __init__.py
+│   ├── cnn_model.py
+│   ├── multimodal_model.py
+│   ├── tabular_model.py
+│   └── house_model.pkl
+│
+├── api.py
+├── app.py
+├── cnn_model.py
 ├── compare.py
+├── data_processing.py
+├── graph_features.py
+├── image_features.py
+├── market_features.py
+├── model_training.py
+├── rl_price_trend.py
+├── setup_data.py
+├── test_api.py
+├── train.py
+│
+├── house_price_model.onnx
+├── house_price_model.onnx.data
+├── house_price_model.pt
+├── model.onnx
+├── model.pth
+├── scaler.pkl
+│
+├── mlflow.db
 ├── requirements.txt
-└── README.md
+├── runtime.txt
+├── README.md
+├── .gitignore
+
+
 
 🚀 Installation & Setup
 # Clone repository
@@ -155,6 +235,7 @@ pip install -r requirements.txt
 
 # Run app
 streamlit run app.py
+python train.py
 
 🌐 Deployment
 Streamlit Cloud ready
@@ -164,4 +245,3 @@ Mapbox API enabled
 ⚠️ Note : Dataset and images are excluded to keep repository lightweight.
 
 🧠 Key Innovation : “Fusion of Multimodal Deep Learning with Geospatial Reachability and Tier-Based Market Intelligence for fine-grain urban price prediction.”
-of Indian cities:
