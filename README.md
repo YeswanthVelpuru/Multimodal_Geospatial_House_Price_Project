@@ -128,99 +128,31 @@ GitHub Actions
 flake8 (lint)
 pytest (testing)
 
+
+ ## 📂 Project Structure
+
+
 Multimodal_Geospatial_House_Price_Project/
-│
-├── .github/
-│   └── workflows/
-│       └── python-package.yml
-│
+├── .github/workflows/        # CI/CD pipelines
 ├── data/
-│   ├── __init__.py
-│   ├── data.csv
-│   ├── house_data.csv
-│   ├── dataset.py
-│   ├── generate_images.py
-│   │
-│   ├── images/
-│   │   ├── house1.jpg
-│   │   ├── house2.jpg
-│   │   ├── house3.jpg
-│   │   ├── house4.jpg
-│   │   └── house5.jpg
-│   │
-│   └── (additional images folder)
-│       ├── house1.jpg
-│       ├── house2.jpg
-│       └── house3.jpg
-│
-├── evaluation/
-│   ├── __init__.py
-│   └── model_comparison.py
-│
-├── explainability/
-│   ├── __init__.py
-│   └── shap_explainer.py
-│
-├── mlruns/
-│   └── 0/
-│       └── models/
-│           ├── m-6878ea32100d48709988560d67a9beb4/
-│           │   └── artifacts/
-│           │       ├── MLmodel
-│           │       ├── conda.yaml
-│           │       ├── model.pkl
-│           │       ├── python_env.yaml
-│           │       └── requirements.txt
-│           │
-│           ├── m-6fd1d7d3c8a14a5184540b7b6351d72f/
-│           │   └── artifacts/
-│           │       ├── MLmodel
-│           │       ├── conda.yaml
-│           │       ├── model.pkl
-│           │       ├── python_env.yaml
-│           │       └── requirements.txt
-│           │
-│           └── m-ae33271ca51149d788e2ec78f5079c7e/
-│               └── artifacts/
-│                   ├── MLmodel
-│                   ├── conda.yaml
-│                   ├── model.pkl
-│                   ├── python_env.yaml
-│                   └── requirements.txt
-│
+│   ├── dataset.py            # PyTorch Dataset class
+│   ├── data.csv              # Primary tabular dataset
+│   ├── images/               # Satellite/Property imagery
+│   └── generate_images.py    # Script for image preprocessing
 ├── models/
-│   ├── __init__.py
-│   ├── cnn_model.py
-│   ├── multimodal_model.py
-│   ├── tabular_model.py
-│   └── house_model.pkl
-│
-├── api.py
-├── app.py
-├── cnn_model.py
-├── compare.py
-├── data_processing.py
-├── graph_features.py
-├── image_features.py
-├── market_features.py
-├── model_training.py
-├── rl_price_trend.py
-├── setup_data.py
-├── test_api.py
-├── train.py
-│
-├── house_price_model.onnx
-├── house_price_model.onnx.data
-├── house_price_model.pt
-├── model.onnx
-├── model.pth
-├── scaler.pkl
-│
-├── mlflow.db
-├── requirements.txt
-├── runtime.txt
-├── README.md
-├── .gitignore
+│   ├── multimodal_model.py   # Fusion architecture (CNN + Tabular)
+│   ├── cnn_model.py          # Visual feature extractor
+│   └── tabular_model.py      # Numerical feature processor
+├── evaluation/               # Metrics and model comparison scripts
+├── explainability/           # SHAP/LIME implementation for XAI
+├── mlruns/                   # MLflow experiment tracking logs
+├── api.py                    # FastAPI backend
+├── app.py                    # Streamlit frontend dashboard
+├── graph_features.py         # Geospatial relationship logic
+├── train.py                  # Main training entry point
+├── requirements.txt          # Python dependencies
+└── README.md                 # Project documentation
+
 
 
 
